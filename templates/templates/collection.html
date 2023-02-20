@@ -1,0 +1,40 @@
+{% extends "lab1p/../templates/navbar.html" %}
+{% load static %}
+
+{% block head %}
+    <style>
+                #intro {
+            background-image: url("{% static 'profile_bg.jpg' %}");
+            background-size: cover;
+          }
+            @media (min-width: 992px) {
+            #intro {
+              margin-top: -58.59px;
+            }
+          }
+    </style>
+    <title>Collection</title>
+{% endblock %}
+
+{% block body %}
+    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="container align-items-center justify-content-center text-center h-100">
+              <div class="text-white">
+                      <h1>Book List</h1>
+                      {% if book_list %}
+                      <ul>
+                        {% for book in book_list %}
+                          <li>
+                            <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})
+                          </li>
+                        {% endfor %}
+                      </ul>
+                      {% else %}
+                        <p>There are no books in the library.</p>
+                      {% endif %}
+              </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

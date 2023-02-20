@@ -1,0 +1,150 @@
+{% extends "templates/navbar.html" %}
+{% load static %}
+
+<link rel="stylesheet" href="for_charts/charts.css">
+<script src="for_charts/colors-generator.js"></script>
+
+{% block head %}
+    <title>Home</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js" integrity="sha512-v3ygConQmvH0QehvQa6gSvTE2VdBZ6wkLOlmK7Mcy2mZ0ZF9saNbbk19QeaoTHdWIEiTlWmrwAL4hS8ElnGFbA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <script>
+    function createChart(chartId, chartData, colorScale, colorRangeInfo) {
+          /* Grab chart element by id */
+          const chartElement = document.getElementById(chartId);
+
+          const dataLength = chartData.data.length;
+
+          /* Create color array */
+          var COLORS = interpolateColors(dataLength, colorScale, colorRangeInfo);
+
+
+          /* Create chart */
+          const myChart = new Chart(chartElement, {
+            type: 'doughnut',
+            data: {
+              labels: chartData.labels,
+              datasets: [
+                {
+                  backgroundColor: COLORS,
+                  hoverBackgroundColor: COLORS,
+                  data: chartData.data
+                }
+              ],
+            },
+            options: {
+              responsive: true,
+              legend: {
+                display: false,
+              },
+              hover: {
+                onHover: function(e) {
+                  var point = this.getElementAtEvent(e);
+                  e.target.style.cursor = point.length ? 'pointer' : 'default';
+                },
+              },
+            }
+          });
+
+          return myChart;
+        }
+
+        function getRandomNumber(min, max) {
+          return Math.round(Math.random() * (max - min) + min);
+        }
+    </script>
+    <style>
+        #intro {
+            background-image: url("{% static 'profile_bg.jpg' %}");
+            object-fit: cover;
+          }
+        @media (min-width: 992px) {
+            #intro {
+              margin-top: -58.59px;
+            }
+          }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="container align-items-start justify-content-start text-start h-100">
+              <div class="text-white">
+              <br>
+                  <div class="row">
+                    <div class="col-sm" style="width: 40%">
+                        <h1>Genres for books</h1>
+
+                        <div class="chart-container"></div>
+                        <div>
+                            <canvas id="myChart"></canvas>
+                        </div>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                          const ctx = document.getElementById('myChart');
+                          Chart.defaults.color = '#fff';
+
+                          const Chart1 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: [{% for genre in genres %}'{{ genre.Name }}',{% endfor %}],
+                              datasets: [{
+                                label: 'Genres for books',
+                                data: [{% for num in nums %}
+                                        {{ num }},
+                                        {% endfor %}],
+                                borderWidth: 1
+                              }]
+                            },
+                            options: {
+                              scales: {
+                                y: {
+                                  beginAtZero: true
+                                }
+                              }
+                            }
+                          });
+                        </script>
+                    </div>
+                    <div class="col-sm" style="width: 40%">
+                        <h1>Books for authors</h1>
+                        <div>
+                            <canvas id="SecondChart"></canvas>
+                        </div>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                            const ctx1 = document.getElementById('SecondChart');
+                                Chart.defaults.color = '#fff';
+                              const Second = new Chart(ctx1, {
+                                type: 'pie',
+                                data: {
+                                    labels: [{% for author in authors %}'{{ author.Name }} {{ author.Surname }}',{% endfor %}],
+                                  datasets: [{
+                                    label: 'Books for authors',
+                                    data: [{% for num_a in auth_nums %}
+                                            {{ num_a }},
+                                            {% endfor %}],
+                                    borderWidth: 1
+                                  }]
+                                },
+                                options: {
+                                  scales: {
+                                    y: {
+                                      beginAtZero: true
+                                    }
+                                  }
+                                }
+                              });
+                        </script>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

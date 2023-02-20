@@ -1,0 +1,90 @@
+{% extends "templates/navbar.html" %}
+{% load static %}
+
+{% block head %}
+    <script>
+        var m = document.getElementsByClassName("alert");  // Return an array
+
+        setTimeout(function(){
+           if (m && m.length) {
+               m[0].classList.add('hide');
+           }
+        }, 2000);
+    </script>
+    <style>
+                #intro {
+            background-image: url("{% static 'profile_bg.jpg' %}");
+            background-size: cover;
+          }
+            @media (min-width: 992px) {
+            #intro {
+              margin-top: -58.59px;
+            }
+          }
+
+        .alert {
+            animation: fadeInDown;
+            animation-duration: 2s;
+            positition: relative;
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0px);
+            transition: visibility 0s, opacity 250ms, transform 250ms;
+        }
+        .alert.hide {
+            animation: fadeOut;
+            animation-duration: 4s;
+            positition: relative;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-10px); // translateX, translateY, translateZ works well
+            transition: visibility 0s 250ms, opacity 250ms, transform 250ms;
+        }
+
+    </style>
+        <title>Delete collection</title>
+{% endblock %}
+
+{% block body %}
+    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+                <div class="container d-flex align-items-center justify-content-center text-center h-100">
+                  <div class="text-white">
+                      {% if messages %}
+                          {% for message in messages %}
+                              <div class="alert alert-{{ message.tags }}">
+                                  {{ message }}
+                              </div>
+                          {% endfor %}
+                      {% else %}
+                          <br><br><br>
+                      {% endif %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 col-xs-12">
+                              <div class="x_panel">
+                                <div class="x_title">
+                                  <h2>Data Export</h2>
+
+                                  <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                    <div class="row">
+                                  <div class="col-md-8 col-sm-12 col-xs-12 form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-6" for="name">Company<span class="required">*</span>
+                                    </label>
+
+                                  </div>
+                                </div>
+                                  <button type="submit" class="btn btn-success" >Export</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                      </form>
+                  </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

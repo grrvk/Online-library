@@ -1,0 +1,51 @@
+{% extends "templates/navbar.html" %}
+{% load static %}
+
+{% block head %}
+    <style>
+        #intro {
+        background-image: url("{% static 'profile_bg.jpg' %}");
+        background-size: cover;
+      }
+        @media (min-width: 992px) {
+        #intro {
+          margin-top: -58.59px;
+        }
+      }
+    </style>
+    <title>Book info</title>
+{% endblock %}
+
+{% block body %}
+    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="container d-flex align-items-start justify-content-start text-start h-100">
+              <div class="text-white">
+                  <br><br><br>
+                    <div class="t208__text t-text t-text_sm" field="text" style="color:#ffffff;font-size:20px;font-weight:600;">
+                          <h1>Title: {{ book.title }}</h1>
+
+                          <p><strong>Author:</strong> <a href="{% url 'author_detail' book.author.pk %}"  style="color:white">{{ book.author }}</a></p> <!-- author detail link not yet defined -->
+                          <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+                          <p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
+
+                          <br><br/>
+                    </div>
+                    <h1 style="color: white">Comments</h1>
+                    <i><p><a href="{% url 'add-comment' book.pk %}" style="color: white">Add new</a></p></i>
+                    {% if not book.comments.all %}
+                        No comments yet
+                        <br>
+                    {% else %}
+                        <br>
+                        {% for comment in book.comments.all %}
+                            <strong>{{ comment.name }} - {{ comment.date_added }} </strong>
+                            <br>
+                            {{ comment.text }}
+                        {% endfor %}
+                    {% endif %}
+              </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

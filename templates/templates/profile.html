@@ -1,0 +1,94 @@
+{% extends "templates/navbar.html" %}
+{% load static %}
+
+{% block head %}
+    <script>
+        var m = document.getElementsByClassName("alert");  // Return an array
+
+        setTimeout(function(){
+           if (m && m.length) {
+               m[0].classList.add('hide');
+           }
+        }, 2000);
+    </script>
+    <title>Profile</title>
+    <link rel="preload" href="{% static 'profile_bg.jpg' %}" as=" image" />
+    <style>
+        #intro {
+            background-image: url("{% static 'profile_bg.jpg' %}");
+            object-fit: cover;
+          }
+        @media (min-width: 992px) {
+            #intro {
+              margin-top: -58.59px;
+            }
+          }
+        div.scroll {
+            width: auto;
+            height: 40%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .alert {
+            animation: fadeInDown;
+            animation-duration: 2s;
+            positition: relative;
+            opacity: 0.5;
+            visibility: visible;
+            transform: translateX(0px);
+            transition: visibility 0s, opacity 250ms, transform 250ms;
+        }
+        .alert.hide {
+            animation: fadeOut;
+            animation-duration: 4s;
+            positition: relative;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-10px); // translateX, translateY, translateZ works well
+            transition: visibility 0s 250ms, opacity 250ms, transform 250ms;
+        }
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="container align-items-start justify-content-start text-start h-100">
+              <div class="text-white">
+              <br><br><br>
+                    <div class="t208__text t-text t-text_sm" field="text" style="color:#ffffff;font-size:20px;font-weight:600;font-family:'FuturaPT';text-transform:uppercase;">
+                        <h1>
+                            Username: {{ user.username }}
+                        </h1>
+                        <h1>
+                            Status: {{ user.profile.status }}
+                        </h1>
+                    </div>
+              <br><br>
+                    <div class="container">
+                        <h1>Collections</h1>
+                            <div class="scroll">
+                                {% for cl in collection %}
+                                    <div class="overflow-auto">
+                                        <div class="card text-white bg-dark mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><a href="{% url 'books-for-collection' cl.pk %}">{{ cl.Name }}</a></h5>
+                                                <p class="card-text">Info: {% if cl.Information %}
+                                                    {{ cl.Information }}
+                                                    {% else %}
+                                                    None
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+              </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

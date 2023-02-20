@@ -1,0 +1,108 @@
+{% extends "templates/navbar.html" %}
+{% load static %}
+
+{% block head %}
+    <script>
+        var m = document.getElementsByClassName("alert");  // Return an array
+
+        setTimeout(function(){
+           if (m && m.length) {
+               m[0].classList.add('hide');
+           }
+        }, 2000);
+    </script>
+    <title>Profile</title>
+    <link rel="preload" href="{% static 'profile_bg.jpg' %}" as=" image" />
+    <style>
+        #intro {
+            background-image: url("{% static 'profile_bg.jpg' %}");
+            object-fit: cover;
+          }
+        @media (min-width: 992px) {
+            #intro {
+              margin-top: -58.59px;
+            }
+          }
+        div.scroll {
+            width: auto;
+            height: 40%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .alert {
+            animation: fadeInDown;
+            animation-duration: 2s;
+            positition: relative;
+            opacity: 0.5;
+            visibility: visible;
+            transform: translateX(0px);
+            transition: visibility 0s, opacity 250ms, transform 250ms;
+        }
+        .alert.hide {
+            animation: fadeOut;
+            animation-duration: 4s;
+            positition: relative;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-10px); // translateX, translateY, translateZ works well
+            transition: visibility 0s 250ms, opacity 250ms, transform 250ms;
+        }
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="container align-items-center justify-content-center text-center h-90">
+              <div class="text-white">
+                  <div class="container">
+                      {% if messages %}
+                          {% for message in messages %}
+                              <div class="alert alert-{{ message.tags }}">
+                                  {{ message }}
+                              </div>
+                          {% endfor %}
+                      {% else %}
+                          <br><br><br>
+                      {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                      <button type="submit" class="btn btn-dark">Submit</button>
+                    </form>
+                  </div>
+              </div>
+            </div>
+            <br><br/>
+            <div class="container h-100">
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="container align-items-start justify-content-start text-start">
+                            <h1 style="color: white">Collections</h1>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="container d-flex align-items-end justify-content-end text-end">
+                            <a href="{% url 'add-collection' %}" class="btn btn-dark">Add new collection</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll">
+                    {% for cl in collections %}
+                        <div class="overflow-auto">
+                            <div class="card text-white bg-dark mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ cl.Name }}</h5>
+                                    <p class="card-text">None</p>
+                                    <a href="{% url 'delete-collection' cl.pk %}" class="btn btn-primary">Delete collection</a>
+                                    <a href="{% url 'edit-collection' cl.pk %}" class="btn btn-primary">Edit collection</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "templates/navbar.html" %}
+{% load static %}
+
+{% block head %}
+    <script>
+        var m = document.getElementsByClassName("alert");  // Return an array
+
+        setTimeout(function(){
+           if (m && m.length) {
+               m[0].classList.add('hide');
+           }
+        }, 2000);
+    </script>
+    <title>Profile</title>
+    <link rel="preload" href="{% static 'profile_bg.jpg' %}" as=" image" />
+    <style>
+        #intro {
+            background-image: url("{% static 'profile_bg.jpg' %}");
+            object-fit: cover;
+          }
+        @media (min-width: 992px) {
+            #intro {
+              margin-top: -58.59px;
+            }
+          }
+        div.scroll {
+            width: auto;
+            height: 40%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 20px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="container align-items-start justify-content-start text-start h-90">
+              <div class="text-white">
+                  <br><br><br>
+                    <div class="t208__text t-text t-text_sm" field="text" style="color:#ffffff;font-size:20px;font-weight:600;font-family:'FuturaPT';">
+                        <h1>
+                            Author: {{ author.Name }} {{ author.Surname }}
+                        </h1>
+                        <h1>
+                            Bio: {{ author.Bio }}
+                        </h1>
+                    </div>
+              <br><br>
+            <div class="container h-100">
+                <div class="container align-items-start justify-content-start text-start">
+                    <div class="text-white">
+                            {% if books %}
+                                    <h1>Books</h1>
+                                    <div class="scroll">
+                                        <div class="container" style="height: 30%">
+                                            <div class="row">
+                                                 {% for book in books %}
+                                                    <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
+                                                        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                                                            <div class="card-body">
+                                                                <a href="{% url 'book-detail' book.pk %}" style="color: white"><h5 class="card-title">{{ book.title }}</h5></a>
+                                                                <p class="card-text" style="font-size:12px;">Author: {{ book.author }}</p>
+                                                                <p class="card-text">ISBN: {{ book.isbn }}</p>
+                                                                <p class="card-text">Genres: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                            {% else %}
+                                <h1>No books for this author</h1>
+                            {% endif %}
+                    </div>
+                </div>
+        </div>
+    </div>
+{% endblock %}
