@@ -1,5 +1,6 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <script>
@@ -69,7 +70,7 @@
                     <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                      <button type="submit" class="btn btn-dark">Submit</button>
+                      <button type="submit" class="btn btn-dark">{% trans "Submit" %}</button>
                     </form>
                   </div>
               </div>
@@ -79,12 +80,12 @@
                 <div class="row">
                     <div class="col-sm">
                         <div class="container align-items-start justify-content-start text-start">
-                            <h1 style="color: white">Collections</h1>
+                            <h1 style="color: white">{% trans "Collections" %}</h1>
                         </div>
                     </div>
                     <div class="col-sm">
                         <div class="container d-flex align-items-end justify-content-end text-end">
-                            <a href="{% url 'add-collection' %}" class="btn btn-dark">Add new collection</a>
+                            <a href="{% url 'add-collection' %}" class="btn btn-dark">{% trans "Add new collections" %}</a>
                         </div>
                     </div>
                 </div>
@@ -94,9 +95,9 @@
                             <div class="card text-white bg-dark mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ cl.Name }}</h5>
-                                    <p class="card-text">None</p>
-                                    <a href="{% url 'delete-collection' cl.pk %}" class="btn btn-primary">Delete collection</a>
-                                    <a href="{% url 'edit-collection' cl.pk %}" class="btn btn-primary">Edit collection</a>
+                                    <p class="card-text">{% trans "None" %}</p>
+                                    <a href="{% url 'delete-collection' cl.pk %}" class="btn btn-primary">{% trans "Delete collection" %}</a>
+                                    <a href="{% url 'edit-collection' cl.pk %}" class="btn btn-primary">{% trans "Edit collection" %}</a>
                                 </div>
                             </div>
                         </div>

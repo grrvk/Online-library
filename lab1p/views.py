@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView
+from django.views.generic import CreateView, DeleteView, UpdateView
 from django.contrib import messages
 from pandas.io import parsers
-
+from django.utils.translation import gettext as _
 from .models import Author, Book, Genre, UserProfile, Collection, Comment
 from django.views import generic
 from django.contrib.auth import get_user_model
@@ -22,7 +22,7 @@ from django.core.files.storage import FileSystemStorage
 import csv
 
 from lab1p.forms import RegistrationForm, EditProfileForm, EditUserProfileForm, CollectionAddForm, CommentForm, \
-    UserRegisterForm, AddBookForm, AuthorForm, BookForm
+    UserRegisterForm, AddBookForm, AuthorForm, BookForm, AddBForm
 from django.core.exceptions import ValidationError
 
 
@@ -208,6 +208,7 @@ def site(request):
     num_users = user.objects.all().count()
 
     latest_author_list = Author.objects.order_by('-Name')[:5]
+
     context = {
         'num_authors': num_authors,
         'latest_author_list': latest_author_list,
@@ -292,18 +293,41 @@ def addCollection(request):
 
 
 def addBookToColl(request, pk):
+    def get_form_kwargs(self):
+        kwargs = super(AddBookForm, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     book = Book.objects.get(pk=pk)
     collections = Collection.objects.filter(creator=request.user)
-
     form = AddBookForm(collections)
-    if request.POST and form.is_valid():
+    print(form.errors)
+    print(form.is_valid())
+    if request.method == 'POST':
         form = AddBookForm(collections)
-        form.save(commit=False)
+        print(form.errors)
+        print(form.is_valid())
+        form.save(commit = False)
         form.save_m2m()
         return redirect('main')
-
     context = {'form': form}
     return render(request, 'templates/add_book.html', context)
+
+
+class bTcoll(UpdateView):
+    model = Book
+    form_class = AddBForm
+    template_name = 'templates/add_book.html'
+    success_url = reverse_lazy('main')
+
+    def get_form_kwargs(self):
+        """ Passes the request object to the form class.
+         This is necessary to only display members that belong to a given user"""
+
+        kwargs = super(bTcoll, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
 
 
 def search(request):

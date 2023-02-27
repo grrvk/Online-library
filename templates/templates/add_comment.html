@@ -1,5 +1,6 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <style>
@@ -27,7 +28,7 @@
                         <form method="POST">
                             {% csrf_token %}
                             {{ form.as_p }}
-                            <button type="submit" class="btn btn-dark">Add comment</button>
+                            <button type="submit" class="btn btn-dark">{% trans "Add comment" %}</button>
                         </form>
                     </div>
               </div>

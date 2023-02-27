@@ -1,5 +1,6 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <script>
@@ -62,7 +63,7 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="file" name="file" />
-                        <button type="submit" class="btn btn-dark">Upload</button>
+                        <button type="submit" class="btn btn-dark">{% trans "Upload" %}</button>
                     </form>
                   </div>
             </div>

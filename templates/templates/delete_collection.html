@@ -1,5 +1,6 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <style>
@@ -21,13 +22,13 @@
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
                 <div class="container d-flex align-items-center justify-content-center text-center h-100">
                   <div class="text-white">
-                            <h3>Deleting collection: {{ collection.Name }}</h3>
+                            <h3>{% trans "Deleting collection" %}: {{ collection.Name }}</h3>
                                 <br>
                               <div class="form-group">
                                 <form method="POST">
                                     {% csrf_token %}
-                                    <strong>Are you sure?</strong>
-                                  <button type="submit" class="btn btn-dark">Delete</button>
+                                    <strong>{% trans "Are you sure" %}?</strong>
+                                  <button type="submit" class="btn btn-dark">{% trans "Delete" %}</button>
                                 </form>
                               </div>
                   </div>

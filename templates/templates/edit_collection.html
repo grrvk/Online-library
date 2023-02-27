@@ -1,4 +1,5 @@
 {% extends "templates/navbar.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block head %}
@@ -30,7 +31,7 @@
               <div class="text-white">
               <br><br>
                   <div class="container">
-                    <h1 class="font-weight-bold">Books</h1>
+                    <h1 class="font-weight-bold">{% trans "Books" %}</h1>
                     <hr>
                     <br>
                     <div class="row">
@@ -39,15 +40,22 @@
                                 <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
                                     <div class="card-body">
                                         <a href="{% url 'book-detail' book.pk %}"><h5 class="card-title">{{ book.title }}</h5></a>
-                                        <p class="card-text text-muted" style="font-size:12px">Author: {{ book.author }}</p>
+                                        <p class="card-text text-muted" style="font-size:12px">{% trans "Author" %}: {{ book.author }}</p>
                                         <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                        <p class="card-text" style="height: 50px">Genres: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
+                                        <p class="card-text" style="height: 50px">{% trans "Genres" %}:
+                                            <script> i = 0 </script>
+                                            {% for genre in book.genre.filter.all %}
+                                                {% if i < 3 %}:
+                                                    {{ genre.Name }}
+                                                    i++
+                                                {% endif %}
+                                            {% endfor %}</p>
                                         <div class="row">
                                             <div class="col-3 text-center">
                                                 <form method="post">
                                                     {% csrf_token %}
                                                     <input type="hidden" value="{{book.pk}}" name="book_pk">
-                                                    <a href="{% url 'delete-book' collection.pk book.pk %}" class="btn btn-primary">Delete</a>
+                                                    <a href="{% url 'delete-book' collection.pk book.pk %}" class="btn btn-primary">{% trans "Delete" %}</a>
                                                 </form>
                                             </div>
                                             <div class="col-4 text-center">

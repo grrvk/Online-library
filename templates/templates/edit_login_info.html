@@ -1,4 +1,5 @@
 {% extends "templates/navbar.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block head %}
@@ -62,7 +63,7 @@
                     <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                      <button type="submit" class="btn btn-dark">Submit</button>
+                      <button type="submit" class="btn btn-dark">{% trans "Submit" %}</button>
                     </form>
                   </div>
               </div>

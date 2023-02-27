@@ -1,5 +1,6 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <script>
@@ -64,7 +65,7 @@
                       {% else %}
                           <br><br><br>
                       {% endif %}
-                      <h1 class="font-weight-bold">Books</h1>
+                      <h1 class="font-weight-bold">{% trans "Books" %}</h1>
                         <br>
                         <div class="row">
                              {% for book in books_obj %}
@@ -73,8 +74,8 @@
                                     <img class="card-img-top" src="{% static 'book-bg-3.JPG' %}" alt="Card image cap">
                                     <div class="card-body">
                                         <a href="{% url 'book-detail' book.pk %}" style="color: white"><h5 class="card-title">{{ book.title }}</h5></a>
-                                        <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: white">Author: {{ book.author }}</a></p>
-                                        <p class="card-text" style="height: 50px">Genres: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
+                                        <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: white">{{ book.author }}</a></p>
+                                        <p class="card-text" style="height: 50px">{% trans "Genres" %}: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
                                         <div class="row">
                                                 <div class="col-3 text-center">
                                                     {% if user.is_authenticated %}
@@ -91,7 +92,7 @@
 
                                                 </div>
                                                 <div class="col-5 text-center">
-                                                    <a href="{% url 'add-book' book.pk %}" class="btn btn-outline-light">Add</a>
+                                                    <a href="{% url 'add-book' book.pk %}" class="btn btn-outline-light">{% trans "Add" %}</a>
                                                 </div>
         </div>
     </div>

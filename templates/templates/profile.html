@@ -1,5 +1,6 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <script>
@@ -59,22 +60,22 @@
               <br><br><br>
                     <div class="t208__text t-text t-text_sm" field="text" style="color:#ffffff;font-size:20px;font-weight:600;font-family:'FuturaPT';text-transform:uppercase;">
                         <h1>
-                            Username: {{ user.username }}
+                            {% trans "Username" %}: {{ user.username }}
                         </h1>
                         <h1>
-                            Status: {{ user.profile.status }}
+                            {% trans "Status" %}: {{ user.profile.status }}
                         </h1>
                     </div>
               <br><br>
                     <div class="container">
-                        <h1>Collections</h1>
+                        <h1>{% trans "Collections" %}</h1>
                             <div class="scroll">
                                 {% for cl in collection %}
                                     <div class="overflow-auto">
                                         <div class="card text-white bg-dark mb-3">
                                             <div class="card-body">
                                                 <h5 class="card-title"><a href="{% url 'books-for-collection' cl.pk %}">{{ cl.Name }}</a></h5>
-                                                <p class="card-text">Info: {% if cl.Information %}
+                                                <p class="card-text">{% trans "Info" %} {% if cl.Information %}
                                                     {{ cl.Information }}
                                                     {% else %}
                                                     None

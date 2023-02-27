@@ -1,0 +1,285 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-26 21:00+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lab1Prj/settings.py:120
+msgid "Ukrainian"
+msgstr "Українська мова"
+
+#: lab1Prj/settings.py:121
+msgid "English"
+msgstr "Англійська мова"
+
+#: templates/lab1p/book_detail.html:27
+msgid "Title"
+msgstr "Назва"
+
+#: templates/lab1p/book_detail.html:31
+#, fuzzy
+#| msgid "Genres"
+msgid "Genre"
+msgstr "Жанри"
+
+#: templates/lab1p/book_detail.html:35
+msgid "Comments"
+msgstr "Коментарі"
+
+#: templates/lab1p/book_detail.html:36
+msgid "Add new"
+msgstr "Додати новий"
+
+#: templates/lab1p/book_detail.html:38
+msgid "No comments yet"
+msgstr "Ще немає коментарів"
+
+#: templates/lab1p/book_list.html:5 templates/templates/collection.html:25
+#, fuzzy
+#| msgid "Books"
+msgid "Book List"
+msgstr "Книги"
+
+#: templates/lab1p/book_list.html:15 templates/templates/collection.html:35
+msgid "There are no books in the library."
+msgstr "У бібліотеці ще немає книг"
+
+#: templates/lab1p/book_list_added_user.html:27
+#, fuzzy
+#| msgid "My Liked"
+msgid "My liked books"
+msgstr "Улюблені"
+
+#: templates/lab1p/book_list_added_user.html:36
+#: templates/lab1p/book_list_for_collection.html:36
+#: templates/templates/author.html:44
+#: templates/templates/edit_collection.html:43
+#, fuzzy
+#| msgid "Authors"
+msgid "Author"
+msgstr "Автор"
+
+#: templates/lab1p/book_list_added_user.html:37
+#: templates/lab1p/book_list_for_collection.html:37
+#: templates/templates/author.html:66 templates/templates/books.html:78
+#: templates/templates/edit_collection.html:45 templates/templates/main.html:33
+#: templates/templates/search_page.html:64
+#: templates/templates/search_page.html:86
+msgid "Genres"
+msgstr "Жанри"
+
+#: templates/lab1p/book_list_for_collection.html:27
+#, fuzzy
+#| msgid "Collections"
+msgid "Books for collection"
+msgstr "Колекції"
+
+#: templates/registration/collection_form.html:31
+#: templates/templates/add_book.html:31 templates/templates/books.html:95
+msgid "Add"
+msgstr "Додати"
+
+#: templates/registration/logged_out.html:6
+msgid "Click here to login again."
+msgstr "Натисніть тут, щоб залогінитись знову"
+
+#: templates/registration/login.html:29 templates/templates/navbar.html:104
+msgid "Login"
+msgstr "Увійти"
+
+#: templates/registration/registration_form.html:29
+#: templates/templates/navbar.html:101
+msgid "Register"
+msgstr "Зареєструватись"
+
+#: templates/templates/add_comment.html:31
+msgid "Add comment"
+msgstr "Додати коментар"
+
+#: templates/templates/author.html:47 templates/templates/authors.html:35
+#: templates/templates/search_page.html:43
+msgid "Bio"
+msgstr "Біо"
+
+#: templates/templates/author.html:55 templates/templates/books.html:68
+#: templates/templates/edit_collection.html:34 templates/templates/main.html:32
+msgid "Books"
+msgstr "Книги"
+
+#: templates/templates/author.html:75
+msgid "No books for this author"
+msgstr "У автора ще немає книг"
+
+#: templates/templates/authors.html:26 templates/templates/main.html:31
+#: templates/templates/search_page.html:37
+msgid "Authors"
+msgstr "Автори"
+
+#: templates/templates/charts.html:82
+msgid "Genres for books"
+msgstr "Жанри відносно книг"
+
+#: templates/templates/charts.html:116
+msgid "Books for authors"
+msgstr "Книги відносно авторів"
+
+#: templates/templates/delete_book_from_cl.html:25
+msgid "Deleting book"
+msgstr "Видалити книгу"
+
+#: templates/templates/delete_book_from_cl.html:29
+#: templates/templates/delete_collection.html:30
+msgid "Are you sure"
+msgstr "Чи Ви впевнені"
+
+#: templates/templates/delete_book_from_cl.html:30
+#: templates/templates/delete_collection.html:31
+#: templates/templates/edit_collection.html:51
+msgid "Delete"
+msgstr "Видалити"
+
+#: templates/templates/delete_collection.html:25
+#, fuzzy
+#| msgid "Collections"
+msgid "Deleting collection"
+msgstr "Колекції"
+
+#: templates/templates/edit_login_info.html:66
+#: templates/templates/edit_profile.html:73
+msgid "Submit"
+msgstr "ОК"
+
+#: templates/templates/edit_profile.html:83 templates/templates/profile.html:71
+msgid "Collections"
+msgstr "Колекції"
+
+#: templates/templates/edit_profile.html:88
+#, fuzzy
+#| msgid "Collections"
+msgid "Add new collections"
+msgstr "Колекції"
+
+#: templates/templates/edit_profile.html:98
+msgid "None"
+msgstr "Немає"
+
+#: templates/templates/edit_profile.html:99
+#, fuzzy
+#| msgid "Collections"
+msgid "Delete collection"
+msgstr "Колекції"
+
+#: templates/templates/edit_profile.html:100
+#, fuzzy
+#| msgid "Collections"
+msgid "Edit collection"
+msgstr "Колекції"
+
+#: templates/templates/export.html:81 templates/templates/navbar.html:89
+msgid "Export"
+msgstr "Експорт"
+
+#: templates/templates/import.html:66
+msgid "Upload"
+msgstr "Завантажити"
+
+#: templates/templates/main.html:26
+msgid "Local Library Home"
+msgstr "Бібліотека"
+
+#: templates/templates/main.html:27
+msgid "Welcome to LocalLibrary"
+msgstr "Вітаємо!"
+
+#: templates/templates/main.html:29
+msgid "The library has the following record counts"
+msgstr "У нашій бібліотеці вже є"
+
+#: templates/templates/main.html:34
+msgid "Users"
+msgstr "Користувачі"
+
+#: templates/templates/navbar.html:57
+msgid "Lib"
+msgstr "Ліб"
+
+#: templates/templates/navbar.html:65
+msgid "Catalog"
+msgstr "Каталог"
+
+#: templates/templates/navbar.html:67
+msgid "All books"
+msgstr "Усі книги"
+
+#: templates/templates/navbar.html:68
+msgid "All authors"
+msgstr "Усі автори"
+
+#: templates/templates/navbar.html:74 templates/templates/navbar.html:75
+msgid "Search"
+msgstr "Пошук"
+
+#: templates/templates/navbar.html:86 templates/templates/navbar.html:91
+msgid "My profile"
+msgstr "Мій профіль"
+
+#: templates/templates/navbar.html:87
+msgid "Charts"
+msgstr "Діаграми"
+
+#: templates/templates/navbar.html:88
+msgid "Import"
+msgstr "Імпорт"
+
+#: templates/templates/navbar.html:92
+msgid "My Liked"
+msgstr "Улюблені"
+
+#: templates/templates/navbar.html:93
+msgid "Edit profile"
+msgstr "Редагувати профіль"
+
+#: templates/templates/navbar.html:96
+msgid "Logout"
+msgstr "Вийти"
+
+#: templates/templates/profile.html:63
+msgid "Username"
+msgstr "Логін"
+
+#: templates/templates/profile.html:66
+msgid "Status"
+msgstr "Статус"
+
+#: templates/templates/profile.html:78
+msgid "Info"
+msgstr "Інфо"
+
+#: templates/templates/search_page.html:44
+msgid "More info"
+msgstr "Більше інфоромації"
+
+#: templates/templates/search_page.html:53
+msgid "Books: search by names"
+msgstr "Книги: пошук за іменами"
+
+#: templates/templates/search_page.html:75
+msgid "Books: search by genres"
+msgstr "Книги: пошук за жанрами"
+
+#: templates/templates/search_page.html:100
+msgid "You forgot to type data to search"
+msgstr "Ви забули ввести дані для пошуку"

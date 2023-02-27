@@ -11,6 +11,7 @@ from django.contrib import messages
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, Row, Column, Field
 
+
 from lab1p.models import UserProfile, Collection, Comment, Author, Book, Genre
 
 
@@ -176,21 +177,58 @@ class CommentForm(forms.ModelForm):
 class AddBookForm(forms.ModelForm):
 
     collections = forms.ModelMultipleChoiceField(
-                        queryset=Collection.objects.all().order_by('Name'),
+                        queryset=None,
                         #queryset=Collection.user_coll.all(),
-                        label="Collections",
+                        label="collections",
                         widget=forms.CheckboxSelectMultiple)
 
-    def __init__(self, user, *args, **kwargs):
-        #self.creator_id = kwargs.pop(user)
+    def __init__(self, collections, *args, **kwargs):
+        #self.request = kwargs.pop('request')
         super(AddBookForm, self).__init__(*args, **kwargs)
-        self.fields['collections'].queryset = user
+        self.fields['collections'].queryset = collections
 
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        cleaned_data['collections'] = cleaned_data['collections']
+        return self.cleaned_data
     class Meta:
         model = Book
         fields = (
             'collections',
         )
+        exclude =(
+            'title',
+            'author',
+            'isbn',
+            'genre',
+            'Information',
+            'adder',
+        )
+
+class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, collection):
+        return "%s" % collection.Name
+
+class AddBForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        """ Grants access to the request object so that only members of the current user
+        are given as options"""
+
+        self.request = kwargs.pop('request')
+        super(AddBForm, self).__init__(*args, **kwargs)
+        self.fields['collections'].queryset = Collection.objects.filter(
+            creator=self.request.user)
+
+    class Meta:
+        model = Book
+        fields = ['collections',]
+
+    collections = CustomModelMultipleChoiceField(
+        queryset=None,
+        widget=forms.CheckboxSelectMultiple
+    )
+
 
 
 

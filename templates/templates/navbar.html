@@ -1,3 +1,26 @@
+{% load i18n %}
+{% load static i18n languages_helpers %}
+
+<style>
+
+    #language-switcher select {
+        width: auto;
+        background-color: transparent;
+        font-size: 22px;
+        border: 0px solid;
+
+        /*remove arrow*/
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-indent: 1px;
+        text-overflow: '';
+
+        /*remove focus border*/
+        outline: none;
+    }
+
+</style>
+
 <html>
     <head>
         <!-- Required meta tags -->
@@ -18,7 +41,20 @@
     <body>
     <div>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="{% url 'main' %}">Lib</a>
+            <div id="language-switcher" class="navbar-btn collapsed">
+                <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ redirect_to }}" />
+                    <select name="language" onchange="this.form.submit()">
+                        {% for language in request|get_language_info_list_ex %}
+                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                                <span class="flag">{{ language.flag }}</span>
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+            <a class="navbar-brand" href="{% url 'main' %}">{% trans "Lib" %}</a>
             <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
                     aria-controls="collapsibleNavId"
                     aria-expanded="false" aria-label="Toggle navigation"></button>
@@ -26,18 +62,19 @@
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">Catalog</a>
+                           aria-haspopup="true" aria-expanded="false">{% trans "Catalog" %}</a>
                         <div class="dropdown-menu" aria-labelledby="dropdownId">
-                            <a class="dropdown-item" href="{% url 'books' %}">All books</a>
-                            <a class="dropdown-item" href="{% url 'authors' %}">All authors</a>
+                            <a class="dropdown-item" href="{% url 'books' %}">{% trans "All books" %}</a>
+                            <a class="dropdown-item" href="{% url 'authors' %}">{% trans "All authors" %}</a>
                         </div>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0" method="post" action="{% url 'search' %}">
                     {% csrf_token %}
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search" name="searched">
-                    <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+                    <input class="form-control mr-sm-2" type="text" placeholder={% trans "Search" %} name="searched">
+                    <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">{% trans "Search" %}</button>
                 </form>
+
                 <ul class="navbar-nav mt-2 mt-lg-0">
                     <li class="nav-item">
                             {% if user.is_authenticated %}
@@ -46,25 +83,25 @@
                                     aria-haspopup="true" aria-expanded="false">{{ user.get_username }}</a>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownId" >
                                         {% if user.is_superuser %}
-                                            <a class="dropdown-item" href="{% url 'admin:index' %}">My profile</a>
-                                            <a class="dropdown-item" href="{% url 'charts' %}">Charts</a>
-                                            <a class="dropdown-item" href="{% url 'import' %}">Import</a>
-                                            <a class="dropdown-item" href="{% url 'export' %}">Export</a>
+                                            <a class="dropdown-item" href="{% url 'admin:index' %}">{% trans "My profile" %}</a>
+                                            <a class="dropdown-item" href="{% url 'charts' %}">{% trans "Charts" %}</a>
+                                            <a class="dropdown-item" href="{% url 'import' %}">{% trans "Import" %}</a>
+                                            <a class="dropdown-item" href="{% url 'export' %}">{% trans "Export" %}</a>
                                         {% else %}
-                                            <a class="dropdown-item" href="{% url 'user-detail' %}">My profile</a>
-                                            <a class="dropdown-item" href="{% url 'my-added' %}">My Liked</a>
-                                            <a class="dropdown-item" href="{% url 'edit' %}">Edit profile</a>
+                                            <a class="dropdown-item" href="{% url 'user-detail' %}">{% trans "My profile" %}</a>
+                                            <a class="dropdown-item" href="{% url 'my-added' %}">{% trans "My Liked" %}</a>
+                                            <a class="dropdown-item" href="{% url 'edit' %}">{% trans "Edit profile" %}</a>
                                             <!-- <a class="dropdown-item" href="{% url 'edit-login' %}">Edit login info</a> -->
                                         {% endif %}
-                                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                        <a class="dropdown-item" href="{% url 'logout' %}">{% trans "Logout" %}</a>
                                     </div>
                                 </li>
                             {% else %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                                    <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                                    <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
                                 </li>
                             {% endif %}
                     </li>

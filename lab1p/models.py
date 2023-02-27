@@ -115,8 +115,8 @@ class Book(models.Model):
             if len(self.isbn) != 13:
                 raise ValidationError("ISBN must be 13 symbols long")
             for char in self.title:
-                if not (char.isalpha() or char == ' '):
-                    raise ValidationError("Name of comment must not have numbers")
+                if not (char.isalpha() or char == ' ' or char == '-'):
+                    raise ValidationError("Name of book must not have numbers")
         except ValueError:
             raise ValidationError("ISBN must have only numbers")
 
@@ -165,7 +165,7 @@ class Comment(models.Model):
 
     def clean(self):
         for char in self.name:
-            if not (char.isalpha() or char == ' '):
+            if not (char.isalpha() or char == ' ' or char == '-'):
                 raise ValidationError("Name of comment must not have numbers")
 
     def __str__(self):

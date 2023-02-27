@@ -1,5 +1,6 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <title>Teachers</title>
@@ -33,14 +34,14 @@
                     {% if authors %}
                         <br><br>
                         <div class="container" style="height: 50%">
-                            <h1>Authors</h1>
+                            <h1>{% trans "Authors" %}</h1>
                             <div class="scroll">
                                 {% for author in authors %}
                                     <div class="card text-white bg-dark">
                                       <div class="card-body" style="text-align: start">
                                         <h5 class="card-title">{{ author.Name }} {{ author.Surname }}</h5>
-                                        <p class="card-text">Bio: {{ author.Bio }}</p>
-                                        <a href="{% url 'author_detail' author.pk %}" class="btn btn-secondary">More info</a>
+                                        <p class="card-text">{% trans "Bio" %}: {{ author.Bio }}</p>
+                                        <a href="{% url 'author_detail' author.pk %}" class="btn btn-secondary">{% trans "More info" %}</a>
                                       </div>
                                     </div>
                                 {%  endfor %}
@@ -49,7 +50,7 @@
                     {% endif %}
                     <br>
                     {% if books_names %}
-                        <h1>Books: search by names</h1>
+                        <h1>{% trans "Books: search by names" %}</h1>
                         <div class="scroll">
                             <div class="container" style="height: 30%">
                                 <div class="row">
@@ -60,7 +61,7 @@
                                                 <a href="{% url 'book-detail' book.pk %}" style="color: wheat"><h5 class="card-title">{{ book.title }}</h5></a>
                                                 <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: wheat">Author: {{ book.author }}</a></p>
                                                 <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                                <p class="card-text">Genres: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
+                                                <p class="card-text">{% trans "Genres" %}: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +72,7 @@
                     {% endif %}
                     <br>
                     {% if books_genres %}
-                        <h1>Books: search by genres</h1>
+                        <h1>{% trans "Books: search by genres" %}</h1>
                         <div class="scroll">
                             <div class="container" style="height: 30%">
                                 <div class="row">
@@ -82,7 +83,7 @@
                                                 <a href="{% url 'book-detail' book.pk %}" style="color: wheat"><h5 class="card-title">{{ book.title }}</h5></a>
                                                 <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: wheat">Author: {{ book.author }}</a></p>
                                                 <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                                <p class="card-text">Genres:
+                                                <p class="card-text">{% trans "Genres" %}:
                                                         {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}
                                                         </p>
                                                 <p class="card-text">{{ book.Information }}</p>
@@ -96,7 +97,7 @@
                     {% endif %}
                 {% else %}
                     <div class="container d-flex align-items-center justify-content-center text-center h-100">
-                        <h1>You forgot to type data to search</h1>
+                        <h1>{% trans "You forgot to type data to search" %}</h1>
                     </div>
                 {% endif %}
               </div>
