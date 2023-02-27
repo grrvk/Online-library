@@ -63,7 +63,12 @@
                             {% trans "Username" %}: {{ user.username }}
                         </h1>
                         <h1>
-                            {% trans "Status" %}: {{ user.profile.status }}
+                            {% trans "Status" %}:
+                            {% if user.profile.status %}
+                                {{ user.profile.status }}
+                            {% else %}
+                                {% trans "None" %}
+                            {% endif %}
                         </h1>
                     </div>
               <br><br>
@@ -75,7 +80,7 @@
                                         <div class="card text-white bg-dark mb-3">
                                             <div class="card-body">
                                                 <h5 class="card-title"><a href="{% url 'books-for-collection' cl.pk %}">{{ cl.Name }}</a></h5>
-                                                <p class="card-text">{% trans "Info" %} {% if cl.Information %}
+                                                <p class="card-text">{% trans "Info" %}: {% if cl.Information %}
                                                     {{ cl.Information }}
                                                     {% else %}
                                                     None

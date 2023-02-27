@@ -95,7 +95,7 @@
                             <div class="card text-white bg-dark mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ cl.Name }}</h5>
-                                    <p class="card-text">{% trans "None" %}</p>
+                                    <p class="card-text">{% trans "Books count:" %} {{ cl.books_for_collection.all.count }} </p>
                                     <a href="{% url 'delete-collection' cl.pk %}" class="btn btn-primary">{% trans "Delete collection" %}</a>
                                     <a href="{% url 'edit-collection' cl.pk %}" class="btn btn-primary">{% trans "Edit collection" %}</a>
                                 </div>

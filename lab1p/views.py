@@ -78,12 +78,12 @@ def author_detail(request, author_pk):
 
 def charts(request):
     genres = Genre.objects.all()
-    al_books = Book.objects.all()
+    al_genres = Genre.objects.all()
     all_authors = Author.objects.all()
     nums_f_genres = []
     nums_f_authors = []
-    for book in al_books:
-        nums_f_genres.append(book.genre.count())
+    for genre in al_genres:
+        nums_f_genres.append(genre.books.count())
     for author in all_authors:
         nums_f_authors.append(author.auth_books.count())
     context = {
@@ -376,7 +376,11 @@ def importExcel(request):
         dataset = Dataset()
         new_authors = request.FILES['file']
         new_books = request.FILES['file']
-        imported_data = dataset.load(new_authors.read(), format='xlsx')
+        imported_data = ''
+        try:
+            imported_data = dataset.load(new_authors.read(), format='xlsx')
+        except:
+            messages.warning(request, 'File extension is not right.')
         for data in imported_data:
             latest_id = Author.objects.all().values_list('id', flat=True).order_by('-id').first()
             if (latest_id == None):
@@ -448,7 +452,7 @@ def importExcel(request):
 def export_users_excel(request):
     if request.method == 'POST':
         response = HttpResponse(content_type='application/ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="Data.xls"'
+        response['Content-Disposition'] = 'attachment; filename="Data.xlsx"'
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Data')

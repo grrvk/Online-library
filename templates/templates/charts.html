@@ -89,13 +89,42 @@
                         <script>
                           const ctx = document.getElementById('myChart');
                           Chart.defaults.color = '#fff';
+                          var coloR = [];
+                          let usedColors = new Set();
+
+                          var dynamicColors = function() {
+                              var r = Math.floor(Math.random() * 255);
+                              var g = Math.floor(Math.random() * 255);
+                              var b = Math.floor(Math.random() * 255);
+                              let color = "rgb(" + r + "," + g + "," + b + ")";
+
+                              if (!usedColors.has(color)) {
+                                  usedColors.add(color);
+                                  return color;
+                              } else {
+                                  return dynamicColors();
+                              }
+                          };
+
+                          for (i = 0; i < 255; i++) {
+                              coloR.push(dynamicColors());
+                          }
+
+                          var colorsList = ["#1984c5", "#22a7f0", "#63bff0", "#a7d5ed", "#e2e2e2", "#e1a692", "#de6e56",
+                              "#e14b31", "#c23728", "#54bebe", "#76c8c8", "#98d1d1", "#badbdb", "#dedad2", "#e4bcad",
+                              "#df979e", "#d7658b", "#c80064", "#d7e1ee", "#cbd6e4", "#bfcbdb", "#b3bfd1", "#a4a2a8",
+                              "#df8879", "#c86558", "#b04238", "#991f17", "#fd7f6f", "#7eb0d5", "#b2e061", "#bd7ebe",
+                              "#ffb55a", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7"
+
+                          ]
 
                           const Chart1 = new Chart(ctx, {
                             type: 'pie',
                             data: {
-                                labels: [{% for genre in genres %}'{{ genre.Name }}',{% endfor %}],
+                                labels: [{% for genre in genres %}'{{ genre.Name|escapejs }}',{% endfor %}],
                               datasets: [{
                                 label: 'Genres for books',
+                                backgroundColor: colorsList,
                                 data: [{% for num in nums %}
                                         {{ num }},
                                         {% endfor %}],
@@ -103,11 +132,12 @@
                               }]
                             },
                             options: {
+                                //responsive: true,
                               scales: {
                                 y: {
                                   beginAtZero: true
                                 }
-                              }
+                              },
                             }
                           });
                         </script>
@@ -124,9 +154,10 @@
                               const Second = new Chart(ctx1, {
                                 type: 'pie',
                                 data: {
-                                    labels: [{% for author in authors %}'{{ author.Name }} {{ author.Surname }}',{% endfor %}],
+                                    labels: [{% for author in authors %}'{{ author.Name|escapejs }} {{ author.Surname|escapejs }}',{% endfor %}],
                                   datasets: [{
                                     label: 'Books for authors',
+                                    backgroundColor: colorsList,
                                     data: [{% for num_a in auth_nums %}
                                             {{ num_a }},
                                             {% endfor %}],
@@ -138,7 +169,7 @@
                                     y: {
                                       beginAtZero: true
                                     }
-                                  }
+                                  },
                                 }
                               });
                         </script>

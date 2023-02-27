@@ -71,11 +71,12 @@
                              {% for book in books_obj %}
                                 <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
                                     <div class="card text-white bg-dark mb-3" style="max-width: 18rem">
-                                    <img class="card-img-top" src="{% static 'book-bg-3.JPG' %}" alt="Card image cap">
+                                    <img class="card-img-top" src="{% static 'angry_dog.JPG' %}" alt="Card image cap"> <!--book-bg-3 -->
                                     <div class="card-body">
                                         <a href="{% url 'book-detail' book.pk %}" style="color: white"><h5 class="card-title">{{ book.title }}</h5></a>
                                         <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: white">{{ book.author }}</a></p>
-                                        <p class="card-text" style="height: 50px">{% trans "Genres" %}: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
+                                        <p class="card-text" style="height: 50px">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}
+                                        {% if book.genre.all.count > 3  %}... {% endif %}</p>
                                         <div class="row">
                                                 <div class="col-3 text-center">
                                                     {% if user.is_authenticated %}
@@ -92,11 +93,11 @@
 
                                                 </div>
                                                 <div class="col-5 text-center">
-                                                    <a href="{% url 'add-book' book.pk %}" class="btn btn-outline-light">{% trans "Add" %}</a>
+                                                    <a href="{% url 'add-book' book.pk %}" class="btn btn-outline-light">{% trans "Collections" %}</a>
                                                 </div>
-        </div>
-    </div>
-</div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             {% endfor %}

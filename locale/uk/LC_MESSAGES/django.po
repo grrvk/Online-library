@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-26 21:00+0200\n"
+"POT-Creation-Date: 2023-02-27 17:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,7 +88,7 @@ msgid "Books for collection"
 msgstr "Колекції"
 
 #: templates/registration/collection_form.html:31
-#: templates/templates/add_book.html:31 templates/templates/books.html:95
+#: templates/templates/add_book.html:31
 msgid "Add"
 msgstr "Додати"
 
@@ -104,6 +104,12 @@ msgstr "Увійти"
 #: templates/templates/navbar.html:101
 msgid "Register"
 msgstr "Зареєструватись"
+
+#: templates/templates/add_book.html:25
+#, fuzzy
+#| msgid "Collections"
+msgid "Add book to collections"
+msgstr "Додати книгу до колекцій"
 
 #: templates/templates/add_comment.html:31
 msgid "Add comment"
@@ -128,6 +134,11 @@ msgstr "У автора ще немає книг"
 msgid "Authors"
 msgstr "Автори"
 
+#: templates/templates/books.html:95 templates/templates/edit_profile.html:83
+#: templates/templates/profile.html:71
+msgid "Collections"
+msgstr "Колекції"
+
 #: templates/templates/charts.html:82
 msgid "Genres for books"
 msgstr "Жанри відносно книг"
@@ -147,7 +158,7 @@ msgstr "Чи Ви впевнені"
 
 #: templates/templates/delete_book_from_cl.html:30
 #: templates/templates/delete_collection.html:31
-#: templates/templates/edit_collection.html:51
+#: templates/templates/edit_collection.html:58
 msgid "Delete"
 msgstr "Видалити"
 
@@ -161,10 +172,6 @@ msgstr "Колекції"
 #: templates/templates/edit_profile.html:73
 msgid "Submit"
 msgstr "ОК"
-
-#: templates/templates/edit_profile.html:83 templates/templates/profile.html:71
-msgid "Collections"
-msgstr "Колекції"
 
 #: templates/templates/edit_profile.html:88
 #, fuzzy

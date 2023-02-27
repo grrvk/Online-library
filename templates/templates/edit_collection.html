@@ -42,14 +42,8 @@
                                         <a href="{% url 'book-detail' book.pk %}"><h5 class="card-title">{{ book.title }}</h5></a>
                                         <p class="card-text text-muted" style="font-size:12px">{% trans "Author" %}: {{ book.author }}</p>
                                         <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                        <p class="card-text" style="height: 50px">{% trans "Genres" %}:
-                                            <script> i = 0 </script>
-                                            {% for genre in book.genre.filter.all %}
-                                                {% if i < 3 %}:
-                                                    {{ genre.Name }}
-                                                    i++
-                                                {% endif %}
-                                            {% endfor %}</p>
+                                        <p class="card-text" style="height: 50px">
+                                            {% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}{% if book.genre.all.count > 3  %}... {% endif %}</p>
                                         <div class="row">
                                             <div class="col-3 text-center">
                                                 <form method="post">

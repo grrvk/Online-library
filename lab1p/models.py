@@ -105,7 +105,7 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre, related_name='books', blank=True)
     Information = models.TextField(blank=True, max_length=1000)
     adder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    collections = models.ManyToManyField(Collection, blank=True, related_name='books_for_collecton')
+    collections = models.ManyToManyField(Collection, blank=True, related_name='books_for_collection')
 
     # must add validators [**options]
 

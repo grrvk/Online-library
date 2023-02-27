@@ -1,5 +1,8 @@
 {% extends "templates/navbar.html" %}
+
 {% load static %}
+<link rel="stylesheet" href="{% static 'lab1Prj/style.css' %}">
+
 {% load i18n %}
 
 {% block head %}
@@ -29,7 +32,7 @@
                         {% for author in authors_obj %}
                                 <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
                                     <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                                    <img class="card-img-top" src="{% static 'mb_author.JPG' %}" alt="Card image cap">
+                                    <img class="card-img-top" src="{% static 'panda.JPG' %}" alt="Card image cap"> <!--mb_author.JPG -->
                                     <div class="card-body">
                                         <a href="{% url 'author_detail' author.pk %}" style="color: white"><h5 class="card-title">{{ author.Name }} {{ author.Surname }}</h5></a>
                                         <p class="card-text text-muted" style="font-size:12px">{% trans "Bio" %}: {{ author.Bio }}</p>
