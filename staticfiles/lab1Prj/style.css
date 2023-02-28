@@ -1,0 +1,12 @@
+@media (min-width: 992px) {
+            #intro {
+              margin-top: -58.59px;
+            }
+}
+div.scroll {
+    width: auto;
+    height: 40%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 20px;
+}

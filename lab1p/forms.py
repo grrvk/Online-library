@@ -1,20 +1,10 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.utils.translation import gettext_lazy as _
-from django.views import generic
-from django.core.exceptions import ValidationError
-from django.contrib import messages
 
+from lab1p.models import UserProfile, Collection, Comment, Book
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Submit, Row, Column, Field
-
-
-from lab1p.models import UserProfile, Collection, Comment, Author, Book, Genre
-
-
+''' --- if works - delete
 class AuthorForm(forms.Form):
     class Meta:
         model = Author
@@ -36,6 +26,7 @@ class GenreForm(forms.Form):
         fields = (
             'Name',
         )
+'''
 
 
 class RegistrationForm(UserCreationForm):
@@ -72,9 +63,9 @@ class RegistrationForm(UserCreationForm):
         return user
 
 
+# full login edit form
 class EditUserProfileForm(UserChangeForm):
     password = None
-
 
     email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -99,10 +90,6 @@ class EditUserProfileForm(UserChangeForm):
             if not (char.isalpha()):
                 raise forms.ValidationError("Fields must contain only letters")
 
-
-
-
-
     class Meta:
         model = User
         fields = (
@@ -113,10 +100,12 @@ class EditUserProfileForm(UserChangeForm):
         )
 
 
+# only status edit form
 class EditProfileForm(UserChangeForm):
     password = None
 
     status = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
+
     class Meta:
         model = UserProfile
         fields = (
@@ -174,6 +163,7 @@ class CommentForm(forms.ModelForm):
         }
 
 
+''' -- attempt to add book to collections form -- if works - delete
 class AddBookForm(forms.ModelForm):
 
     collections = forms.ModelMultipleChoiceField(
@@ -191,6 +181,7 @@ class AddBookForm(forms.ModelForm):
         cleaned_data = self.cleaned_data
         cleaned_data['collections'] = cleaned_data['collections']
         return self.cleaned_data
+    
     class Meta:
         model = Book
         fields = (
@@ -204,17 +195,16 @@ class AddBookForm(forms.ModelForm):
             'Information',
             'adder',
         )
+'''
+
 
 class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, collection):
         return "%s" % collection.Name
 
+
 class AddBForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
-        """ Grants access to the request object so that only members of the current user
-        are given as options"""
-
         self.request = kwargs.pop('request')
         super(AddBForm, self).__init__(*args, **kwargs)
         self.fields['collections'].queryset = Collection.objects.filter(
@@ -222,14 +212,9 @@ class AddBForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ['collections',]
+        fields = ['collections']
 
     collections = CustomModelMultipleChoiceField(
         queryset=None,
         widget=forms.CheckboxSelectMultiple
     )
-
-
-
-
-

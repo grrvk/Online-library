@@ -1,23 +1,18 @@
 {% extends "templates/navbar.html" %}
 
 {% load static %}
-<link rel="stylesheet" href="{% static 'lab1Prj/style.css' %}">
+
 
 {% load i18n %}
 
 {% block head %}
     <title>Teachers</title>
-        <style>
-        #intro {
-            background-image: url("{% static 'profile_bg.jpg' %}");
-            object-fit: cover;
-          }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock %}
 
 
 {% block body %}
-    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+    <div id="intro_profile" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
             <div class="text-white" style="text-align: center">
                 {% if search %}
@@ -52,7 +47,8 @@
                                                 <a href="{% url 'book-detail' book.pk %}" style="color: wheat"><h5 class="card-title">{{ book.title }}</h5></a>
                                                 <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: wheat">Author: {{ book.author }}</a></p>
                                                 <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                                <p class="card-text">{% trans "Genres" %}: {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}</p>
+                                                <p class="card-text">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}
+                                        {% if book.genre.all.count > 3  %}... {% endif %}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -74,9 +70,8 @@
                                                 <a href="{% url 'book-detail' book.pk %}" style="color: wheat"><h5 class="card-title">{{ book.title }}</h5></a>
                                                 <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: wheat">Author: {{ book.author }}</a></p>
                                                 <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                                <p class="card-text">{% trans "Genres" %}:
-                                                        {% for genre in book.genre.filter.all %} {{ genre.Name }} {% endfor %}
-                                                        </p>
+                                                <p class="card-text">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}
+                                        {% if book.genre.all.count > 3  %}... {% endif %}</p>
                                                 <p class="card-text">{{ book.Information }}</p>
                                             </div>
                                         </div>
@@ -94,5 +89,5 @@
               </div>
             </div>
     </div>
-
+    <br>
 {%  endblock %}

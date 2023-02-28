@@ -11,6 +11,7 @@ class BookResource(resources.ModelResource):
     class meta:
         model = Book
 
+
 class GenreResource(resources.ModelResource):
     class meta:
         model = Genre

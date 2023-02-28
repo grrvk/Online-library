@@ -1,39 +1,97 @@
+from zipfile import BadZipFile
+
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django.contrib import messages
-from pandas.io import parsers
-from django.utils.translation import gettext as _
+
 from .models import Author, Book, Genre, UserProfile, Collection, Comment
 from django.views import generic
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
 from tablib import Dataset
 import xlwt
-from rest_framework import generics
-import pandas as pd
-from django.core.exceptions import ObjectDoesNotExist
-from .resources import AuthorResource, BookResource, GenreResource
-
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-
-import csv
-
-from lab1p.forms import RegistrationForm, EditProfileForm, EditUserProfileForm, CollectionAddForm, CommentForm, \
-    UserRegisterForm, AddBookForm, AuthorForm, BookForm, AddBForm
-from django.core.exceptions import ValidationError
+from lab1p.forms import EditProfileForm, EditUserProfileForm, CollectionAddForm, CommentForm, \
+    UserRegisterForm, AddBForm
 
 
-# Create your views here.
+# main
+
+
+def main(request):
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
+
+    num_books = Book.objects.all().count()
+    num_authors = Author.objects.all().count()
+    num_genres = Genre.objects.all().count()
+
+    user = get_user_model()
+    num_users = user.objects.all().count()
+
+    latest_author_list = Author.objects.order_by('-Name')[:5]
+
+    context = {
+        'num_authors': num_authors,
+        'latest_author_list': latest_author_list,
+        'num_books': num_books,
+        'num_genres': num_genres,
+        'num_users': num_users,
+        'num_visits': num_visits,
+    }
+    return render(request, 'lab1p/../templates/main.html', context)
+
+# authors
+
+
+def author_detail(request, author_pk):
+    author = get_object_or_404(Author, pk=author_pk)
+    authBooks = Book.objects.filter(author=author)
+
+    context = {
+        'author': author,
+        'books': authBooks,
+    }
+
+    return render(request, 'lab1p/../templates/author.html', context)
+
+
+def authors(request):
+    all_authors = Author.objects.all()
+    return render(request=request, template_name="templates/authors.html", context={"authors_obj": all_authors})
+
+
+# books
+
+
+def books(request):  # all-books page + adding to LIKED
+    if request.method == "POST":
+        book_pk = request.POST.get("book_pk")
+        book = Book.objects.get(id=book_pk)
+        request.user.profile.books.add(book)
+        messages.success(request, f'{book} added to liked')
+        return redirect('books')
+    all_books = Book.objects.all()
+    return render(request=request, template_name="templates/books.html", context={"books_obj": all_books})
+
+
+def AddedBooksByUserListView(request):  # my LIKED - rename
+    user_profile = UserProfile.objects.get(user=request.user)
+    all_books = user_profile.books.all()
+
+    context = {
+        'book_list': all_books,
+    }
+    return render(request, 'lab1p/book_list_added_user.html', context)
+
 
 def logout_view(request):
     logout(request)
-
     return redirect('main')
 
 
+''' ---register trial - if works - delete
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -44,36 +102,19 @@ def register(request):
         form = RegistrationForm()
         args = {'form': form}
         return render(request, 'registration/registration_form.html', args)
+'''
 
 
+# commented GET_OBJECT -- if works - delete
 class UserRegister(generic.CreateView):
     form_class = UserRegisterForm
     template_name = 'registration/registration_form.html'
     success_url = reverse_lazy('main')
 
-    def get_object(self):
-        return self.request.user
+    # def get_object(self):
+    #    return self.request.user
 
 
-def index(request):
-    latest_author_list = Author.objects.order_by('-Name')[:5]
-    context = {
-        'latest_author_list': latest_author_list,
-    }
-    return render(request, 'lab1p/../templates/index.html', context)
-
-
-def author_detail(request, author_pk):
-    author = get_object_or_404(Author, pk=author_pk)
-
-    books = Book.objects.filter(author=author)
-
-    context = {
-        'author': author,
-        'books': books,
-    }
-
-    return render(request, 'lab1p/../templates/author.html', context)
 
 
 def charts(request):
@@ -105,6 +146,7 @@ def profile(request):
     return render(request, 'templates/profile.html', context)
 
 
+''' profile editing - if works - delete (only status)
 def edit_profile(request, user_id):
     user = get_object_or_404(get_user_model(), pk=user_id)
     if request.method == 'POST':
@@ -117,8 +159,9 @@ def edit_profile(request, user_id):
         form = EditProfileForm(instance=user)
         args = {'form': form}
         return render(request, 'templates/edit_profile.html', args)
+'''
 
-
+''' profile editing (BUT FORM) - if works - delete (only status)
 class UserEditProfile(generic.UpdateView):
     form_class = EditProfileForm
     template_name = 'templates/edit_profile.html'
@@ -126,9 +169,10 @@ class UserEditProfile(generic.UpdateView):
 
     def get_object(self):
         return self.request.user
+'''
 
 
-def edit_full_profile(request):
+def edit_full_profile(request):  # EDIT PROFILE FUNC - not login info
     creator = request.user
     collections = creator.collections.all()
     form = EditProfileForm(request.POST or None, instance=creator.profile)
@@ -172,6 +216,7 @@ def edit_collection(request, pk):
     return render(request, 'templates/edit_collection.html', context=context)
 
 
+''' --- full login info edit -- if works - delete
 def edit_login_info(request, user_id):
     user = get_object_or_404(get_user_model(), pk=user_id)
     if request.method == 'POST':
@@ -185,73 +230,23 @@ def edit_login_info(request, user_id):
         form = EditUserProfileForm(instance=user)
         args = {'form': form}
         return render(request, 'templates/edit_login_info.html', args)
+'''
 
 
+# login info edit - now is not used -- commented GET_OBJECT  -- if works - delete
 class UserLoginIfoEdit(generic.UpdateView):
     form_class = EditUserProfileForm
     template_name = 'templates/edit_login_info.html'
     success_url = reverse_lazy('main')
 
-    def get_object(self):
-        return self.request.user
-
-
-def site(request):
-    num_visits = request.session.get('num_visits', 0)
-    request.session['num_visits'] = num_visits + 1
-
-    num_books = Book.objects.all().count()
-    num_authors = Author.objects.all().count()
-    num_genres = Genre.objects.all().count()
-
-    user = get_user_model()
-    num_users = user.objects.all().count()
-
-    latest_author_list = Author.objects.order_by('-Name')[:5]
-
-    context = {
-        'num_authors': num_authors,
-        'latest_author_list': latest_author_list,
-        'num_books': num_books,
-        'num_genres': num_genres,
-        'num_users': num_users,
-        'num_visits': num_visits,
-    }
-    return render(request, 'lab1p/../templates/main.html', context)
-
-
-class BookListView(generic.ListView):
-    model = Book
+    # def get_object(self):
+    #    return self.request.user
 
 
 class BookDetailView(generic.DetailView):
     model = Book
 
 
-def books(request):
-    if request.method == "POST":
-        book_pk = request.POST.get("book_pk")
-        book = Book.objects.get(id=book_pk)
-        request.user.profile.books.add(book)
-        messages.success(request, (f'{book} added to liked'))
-        return redirect('books')
-    all_books = Book.objects.all()
-    return render(request=request, template_name="templates/books.html", context={"books_obj": all_books})
-
-
-def authors(request):
-    all_authors = Author.objects.all()
-    return render(request=request, template_name="templates/authors.html", context={"authors_obj": all_authors})
-
-
-def AddedBooksByUserListView(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    all_books = user_profile.books.all()
-
-    context = {
-        'book_list': all_books,
-    }
-    return render(request, 'lab1p/book_list_added_user.html', context)
 
 
 def books_for_collection(request, collection_id):
@@ -292,6 +287,7 @@ def addCollection(request):
         return render(request, 'registration/collection_form.html', args)
 
 
+''' ----- previous attempt to add books to collections -- if works - delete
 def addBookToColl(request, pk):
     def get_form_kwargs(self):
         kwargs = super(AddBookForm, self).get_form_kwargs()
@@ -307,14 +303,15 @@ def addBookToColl(request, pk):
         form = AddBookForm(collections)
         print(form.errors)
         print(form.is_valid())
-        form.save(commit = False)
+        form.save(commit=False)
         form.save_m2m()
         return redirect('main')
     context = {'form': form}
     return render(request, 'templates/add_book.html', context)
+'''
 
 
-class bTcoll(UpdateView):
+class addBookToCollections(UpdateView):
     model = Book
     form_class = AddBForm
     template_name = 'templates/add_book.html'
@@ -324,70 +321,51 @@ class bTcoll(UpdateView):
         """ Passes the request object to the form class.
          This is necessary to only display members that belong to a given user"""
 
-        kwargs = super(bTcoll, self).get_form_kwargs()
+        kwargs = super(addBookToCollections, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
-
 
 
 def search(request):
     if request.method == 'POST':
         searched = request.POST['searched']
-        books_names = Book.objects.filter(title__contains=searched)
-        books_genres = Book.objects.filter(genre__Name__contains=searched)
-        authors = Author.objects.filter(Name__contains=searched) | Author.objects.filter(Surname__contains=searched)
+        searched_books_names = Book.objects.filter(title__contains=searched)
+        searched_books_genres = Book.objects.filter(genre__Name__contains=searched)
+        searched_authors = Author.objects.filter(Name__contains=searched) | \
+                           Author.objects.filter(Surname__contains=searched)
 
         context = {
             'search': searched,
-            'books_names': books_names,
-            'books_genres': books_genres,
-            'authors': authors,
+            'books_names': searched_books_names,
+            'books_genres': searched_books_genres,
+            'authors': searched_authors,
         }
         return render(request, 'templates/search_page.html', context)
     else:
         return render(request, 'templates/search_page.html')
 
 
-def importExcell(request):
-    if request.method == 'POST':
-        author_res = AuthorResource()
-        dataset = Dataset()
-        new_authors = request.FILES['file']
-        imported_data = dataset.load(new_authors.read(), format='xlsx')
-        for data in imported_data:
-            latest_id = Author.objects.all().values_list('id', flat=True).order_by('-id').first()
-            value = Author(
-                latest_id + 1,
-                data[1],
-                data[2],
-                data[3],
-            )
-            if (not Author.objects.filter(Name=data[1], Surname=data[2])):
-                value.save()
-
-    return render(request, 'templates/import.html')
-
-
+# commented some unused vars -- if works - delete
 def importExcel(request):
     if request.method == 'POST':
-        author_res = AuthorResource()
-        book_res = BookResource()
-        genre_res = GenreResource
+        # author_res = AuthorResource()
+        # book_res = BookResource()
+        # genre_res = GenreResource
         dataset = Dataset()
         new_authors = request.FILES['file']
-        new_books = request.FILES['file']
+        # new_books = request.FILES['file']
         imported_data = ''
         try:
-            imported_data = dataset.load(new_authors.read(), format='xlsx')
-        except:
-            messages.warning(request, 'File extension is not right.')
+            imported_data = dataset.load(new_authors.read(), format='xls')
+        except BadZipFile as e:
+            messages.warning(request, f'Error: {e}')
         for data in imported_data:
             latest_id = Author.objects.all().values_list('id', flat=True).order_by('-id').first()
-            if (latest_id == None):
-                latest_id = 0;
-            latest_id_genre = Genre.objects.all().values_list('id', flat=True).order_by('-id').first()
+            if latest_id is None:
+                latest_id = 0
+            # latest_id_genre = Genre.objects.all().values_list('id', flat=True).order_by('-id').first()
 
-            if (not Author.objects.filter(Name=data[1], Surname=data[2])):
+            if not Author.objects.filter(Name=data[1], Surname=data[2]):
                 value = Author(
                     latest_id + 1,
                     data[1],
@@ -398,46 +376,46 @@ def importExcel(request):
 
             author = Author.objects.get(Name=data[1], Surname=data[2])
 
-            books = Book.objects.all()
+            import_books = Book.objects.all()
             unique = True
-            for book in books:
-                if (book.isbn == data[6]):
-                    unique = False;
+            for book in import_books:
+                if book.isbn == data[6]:
+                    unique = False
 
-            if (not unique):
+            if not unique:
                 book = Book.objects.get(isbn=data[6])
-                if (book.title == data[5] and book.author == author):
+                if book.title == data[5] and book.author == author:
                     genres = Genre.objects.all()
                     for i in range(7, 10):
-                        if (data[i] is not None):
+                        if data[i] is not None:
                             unique_two = True
                             for genre in genres:
-                                if (genre.Name == data[i]):
-                                    unique_two = False;
-                            if (unique_two):
+                                if genre.Name == data[i]:
+                                    unique_two = False
+                            if unique_two:
                                 genre_new = Genre.create(Name=data[i])
-                                genre_new.save()
                             else:
                                 genre_new = Genre.objects.get(Name=data[i])
                             book.genre.add(genre_new)
                 else:
                     messages.warning(request, 'ISBN of some books is not unique. Please check the uploading data.')
             else:
-                if (not Book.objects.filter(title=data[5], author=author)):
+                if not Book.objects.filter(title=data[5], author=author):
                     book = Book.create(data[5], author, data[6])
                     book.save()
                     genres = Genre.objects.all()
                     for i in range(7, 10):
-                        if (data[i] is not None):
+                        if data[i] is not None:
                             unique_two = True
                             for genre in genres:
-                                if (genre.Name == data[i]):
-                                    unique_two = False;
-                            if (unique_two):
+                                if genre.Name == data[i]:
+                                    unique_two = False
+                            if unique_two:
                                 genre_new = Genre.create(Name=data[i])
                                 try:
                                     genre_new.save()
-                                except:
+                                except Exception as e:
+                                    print(e)
                                     pass
                             else:
                                 genre_new = Genre.objects.get(Name=data[i])
@@ -451,8 +429,8 @@ def importExcel(request):
 
 def export_users_excel(request):
     if request.method == 'POST':
-        response = HttpResponse(content_type='application/ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="Data.xlsx"'
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="Data.xls"'
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Data')
@@ -467,9 +445,9 @@ def export_users_excel(request):
 
         font_style = xlwt.XFStyle()
 
-        books = Book.objects.all()
+        books_export = Book.objects.all()
 
-        for book in books:
+        for book in books_export:
             row_num += 1
             col_num = 0
             ws.write(row_num, col_num, str(book.author_id), font_style)

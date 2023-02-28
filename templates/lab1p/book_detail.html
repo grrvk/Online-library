@@ -3,22 +3,12 @@
 {% load i18n %}
 
 {% block head %}
-    <style>
-        #intro {
-        background-image: url("{% static 'profile_bg.jpg' %}");
-        background-size: cover;
-      }
-        @media (min-width: 992px) {
-        #intro {
-          margin-top: -58.59px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Book info</title>
 {% endblock %}
 
 {% block body %}
-    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+    <div id="intro_profile" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
             <div class="container d-flex align-items-start justify-content-start text-start h-100">
               <div class="text-white">

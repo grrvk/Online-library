@@ -1,7 +1,5 @@
-from django.contrib import admin
 from django.db import models
 from django.urls import reverse
-from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.core.exceptions import ValidationError
@@ -53,9 +51,9 @@ class Genre(models.Model):
     display_genre.short_description = 'Genre'
 
 
-#class CollectionManager(models.Manager):
- #   def get_queryset(self):
-  #      return super().get_queryset().filter(creator=2)
+# class CollectionManager(models.Manager):
+#   def get_queryset(self):
+#      return super().get_queryset().filter(creator=2)
 
 
 class Collection(models.Model):
@@ -63,11 +61,8 @@ class Collection(models.Model):
     Name = models.CharField(max_length=50, default='To read')
     Information = models.CharField(max_length=150, default='', blank=True)
     date_created = models.DateField(null=True, blank=True)
-    #user_coll = CollectionManager()
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(creator=self.request.user)
+    # user_coll = CollectionManager()
 
     def __str__(self):
         return f'{self.Name} - by {self.creator.username}'
@@ -111,12 +106,11 @@ class Book(models.Model):
 
     def clean(self):
         try:
-            num = int(self.isbn)
             if len(self.isbn) != 13:
                 raise ValidationError("ISBN must be 13 symbols long")
-            for char in self.title:
-                if not (char.isalpha() or char == ' ' or char == '-'):
-                    raise ValidationError("Name of book must not have numbers")
+            # for char in self.title:
+            #    if not (char.isalpha() or char == ' ' or char == '-'):
+            #        raise ValidationError("Name of book must not have numbers")
         except ValueError:
             raise ValidationError("ISBN must have only numbers")
 

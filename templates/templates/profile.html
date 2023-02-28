@@ -3,57 +3,13 @@
 {% load i18n %}
 
 {% block head %}
-    <script>
-        var m = document.getElementsByClassName("alert");  // Return an array
-
-        setTimeout(function(){
-           if (m && m.length) {
-               m[0].classList.add('hide');
-           }
-        }, 2000);
-    </script>
+    <script src="{% static 'js/script.js' %}"></script>
     <title>Profile</title>
     <link rel="preload" href="{% static 'profile_bg.jpg' %}" as=" image" />
-    <style>
-        #intro {
-            background-image: url("{% static 'profile_bg.jpg' %}");
-            object-fit: cover;
-          }
-        @media (min-width: 992px) {
-            #intro {
-              margin-top: -58.59px;
-            }
-          }
-        div.scroll {
-            width: auto;
-            height: 40%;
-            overflow-x: hidden;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .alert {
-            animation: fadeInDown;
-            animation-duration: 2s;
-            positition: relative;
-            opacity: 0.5;
-            visibility: visible;
-            transform: translateX(0px);
-            transition: visibility 0s, opacity 250ms, transform 250ms;
-        }
-        .alert.hide {
-            animation: fadeOut;
-            animation-duration: 4s;
-            positition: relative;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-10px); // translateX, translateY, translateZ works well
-            transition: visibility 0s 250ms, opacity 250ms, transform 250ms;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock %}
 {% block body %}
-    <div id="intro" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
+    <div id="intro_profile" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
             <div class="container align-items-start justify-content-start text-start h-100">
               <div class="text-white">
