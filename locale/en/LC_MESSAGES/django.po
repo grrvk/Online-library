@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-27 17:29+0200\n"
+"POT-Creation-Date: 2023-03-05 22:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,60 +26,62 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: templates/lab1p/book_detail.html:27
+#: templates/lab1p/book_detail.html:17
 msgid "Title"
 msgstr ""
 
-#: templates/lab1p/book_detail.html:31
+#: templates/lab1p/book_detail.html:21
 msgid "Genre"
 msgstr ""
 
-#: templates/lab1p/book_detail.html:35
+#: templates/lab1p/book_detail.html:25
 msgid "Comments"
 msgstr ""
 
-#: templates/lab1p/book_detail.html:36
+#: templates/lab1p/book_detail.html:26
 msgid "Add new"
 msgstr ""
 
-#: templates/lab1p/book_detail.html:38
+#: templates/lab1p/book_detail.html:28
 msgid "No comments yet"
 msgstr ""
 
-#: templates/lab1p/book_list.html:5 templates/templates/collection.html:25
+#: templates/lab1p/book_list.html:5 templates/templates/collection.html:15
 msgid "Book List"
 msgstr ""
 
-#: templates/lab1p/book_list.html:15 templates/templates/collection.html:35
+#: templates/lab1p/book_list.html:15 templates/templates/collection.html:25
 msgid "There are no books in the library."
 msgstr ""
 
-#: templates/lab1p/book_list_added_user.html:27
+#: templates/lab1p/book_list_added_user.html:17
 msgid "My liked books"
 msgstr ""
 
-#: templates/lab1p/book_list_added_user.html:36
-#: templates/lab1p/book_list_for_collection.html:36
-#: templates/templates/author.html:44
-#: templates/templates/edit_collection.html:43
+#: templates/lab1p/book_list_added_user.html:26
+#: templates/lab1p/book_list_for_collection.html:26
+#: templates/templates/author.html:21
 msgid "Author"
 msgstr ""
 
-#: templates/lab1p/book_list_added_user.html:37
-#: templates/lab1p/book_list_for_collection.html:37
-#: templates/templates/author.html:66 templates/templates/books.html:78
-#: templates/templates/edit_collection.html:45 templates/templates/main.html:33
-#: templates/templates/search_page.html:64
-#: templates/templates/search_page.html:86
+#: templates/lab1p/book_list_added_user.html:27
+#: templates/lab1p/book_list_for_collection.html:27
+#: templates/templates/author.html:44 templates/templates/books.html:36
+#: templates/templates/edit_collection.html:28 templates/templates/main.html:23
+#: templates/templates/search_page.html:32
 msgid "Genres"
 msgstr ""
 
-#: templates/lab1p/book_list_for_collection.html:27
+#: templates/lab1p/book_list_for_collection.html:17
 msgid "Books for collection"
 msgstr ""
 
-#: templates/registration/collection_form.html:31
-#: templates/templates/add_book.html:31
+#: templates/registration/collection_form.html:15
+msgid "Add new collection"
+msgstr ""
+
+#: templates/registration/collection_form.html:21
+#: templates/templates/add_book.html:21 templates/templates/add_comment.html:21
 msgid "Add"
 msgstr ""
 
@@ -87,187 +89,209 @@ msgstr ""
 msgid "Click here to login again."
 msgstr ""
 
-#: templates/registration/login.html:29 templates/templates/navbar.html:104
+#: templates/registration/login.html:19 templates/templates/navbar.html:87
 msgid "Login"
 msgstr ""
 
-#: templates/registration/registration_form.html:29
-#: templates/templates/navbar.html:101
+#: templates/registration/registration_form.html:19
+#: templates/templates/navbar.html:84
 msgid "Register"
 msgstr ""
 
-#: templates/templates/add_book.html:25
+#: templates/templates/add_book.html:15
 msgid "Add book to collections"
 msgstr ""
 
-#: templates/templates/add_comment.html:31
+#: templates/templates/add_comment.html:15
 msgid "Add comment"
 msgstr ""
 
-#: templates/templates/author.html:47 templates/templates/authors.html:35
-#: templates/templates/search_page.html:43
+#: templates/templates/author.html:24 templates/templates/authors.html:27
 msgid "Bio"
 msgstr ""
 
-#: templates/templates/author.html:55 templates/templates/books.html:68
-#: templates/templates/edit_collection.html:34 templates/templates/main.html:32
+#: templates/templates/author.html:33 templates/templates/books.html:26
+#: templates/templates/edit_collection.html:17 templates/templates/main.html:22
 msgid "Books"
 msgstr ""
 
-#: templates/templates/author.html:75
+#: templates/templates/author.html:53
 msgid "No books for this author"
 msgstr ""
 
-#: templates/templates/authors.html:26 templates/templates/main.html:31
-#: templates/templates/search_page.html:37
+#: templates/templates/authors.html:18 templates/templates/main.html:21
 msgid "Authors"
 msgstr ""
 
-#: templates/templates/books.html:95 templates/templates/edit_profile.html:83
-#: templates/templates/profile.html:71
+#: templates/templates/books.html:54 templates/templates/edit_profile.html:39
+#: templates/templates/profile.html:33
 msgid "Collections"
 msgstr ""
 
-#: templates/templates/charts.html:82
+#: templates/templates/charts.html:27
 msgid "Genres for books"
 msgstr ""
 
-#: templates/templates/charts.html:116
+#: templates/templates/charts.html:91
 msgid "Books for authors"
 msgstr ""
 
-#: templates/templates/delete_book_from_cl.html:25
+#: templates/templates/delete_book_from_cl.html:15
 msgid "Deleting book"
 msgstr ""
 
-#: templates/templates/delete_book_from_cl.html:29
-#: templates/templates/delete_collection.html:30
+#: templates/templates/delete_book_from_cl.html:15
+msgid "from collection"
+msgstr ""
+
+#: templates/templates/delete_book_from_cl.html:19
+#: templates/templates/delete_collection.html:20
 msgid "Are you sure"
 msgstr ""
 
-#: templates/templates/delete_book_from_cl.html:30
-#: templates/templates/delete_collection.html:31
-#: templates/templates/edit_collection.html:58
+#: templates/templates/delete_book_from_cl.html:20
+#: templates/templates/delete_collection.html:21
+#: templates/templates/edit_collection.html:41
 msgid "Delete"
 msgstr ""
 
-#: templates/templates/delete_collection.html:25
+#: templates/templates/delete_collection.html:15
 msgid "Deleting collection"
 msgstr ""
 
-#: templates/templates/edit_login_info.html:66
-#: templates/templates/edit_profile.html:73
+#: templates/templates/edit_login_info.html:29
+#: templates/templates/edit_profile.html:29
 msgid "Submit"
 msgstr ""
 
-#: templates/templates/edit_profile.html:88
+#: templates/templates/edit_profile.html:44
 msgid "Add new collections"
 msgstr ""
 
-#: templates/templates/edit_profile.html:98
-msgid "None"
+#: templates/templates/edit_profile.html:54
+msgid "Books count:"
 msgstr ""
 
-#: templates/templates/edit_profile.html:99
+#: templates/templates/edit_profile.html:55
 msgid "Delete collection"
 msgstr ""
 
-#: templates/templates/edit_profile.html:100
+#: templates/templates/edit_profile.html:56
 msgid "Edit collection"
 msgstr ""
 
-#: templates/templates/export.html:81 templates/templates/navbar.html:89
+#: templates/templates/export.html:18
+msgid "Data Export"
+msgstr ""
+
+#: templates/templates/export.html:20 templates/templates/navbar.html:72
 msgid "Export"
 msgstr ""
 
-#: templates/templates/import.html:66
+#: templates/templates/import.html:25
+msgid "There are some warnings or errors for data. Please check."
+msgstr ""
+
+#: templates/templates/import.html:35
+msgid "Error list"
+msgstr ""
+
+#: templates/templates/import.html:43
+msgid "There are no errors for import yet"
+msgstr ""
+
+#: templates/templates/import.html:48
+msgid "Close"
+msgstr ""
+
+#: templates/templates/import.html:57
 msgid "Upload"
 msgstr ""
 
-#: templates/templates/main.html:26
+#: templates/templates/import.html:61
+msgid "Show info"
+msgstr ""
+
+#: templates/templates/main.html:16
 msgid "Local Library Home"
 msgstr ""
 
-#: templates/templates/main.html:27
+#: templates/templates/main.html:17
 msgid "Welcome to LocalLibrary"
 msgstr ""
 
-#: templates/templates/main.html:29
+#: templates/templates/main.html:19
 msgid "The library has the following record counts"
 msgstr ""
 
-#: templates/templates/main.html:34
+#: templates/templates/main.html:24
 msgid "Users"
 msgstr ""
 
-#: templates/templates/navbar.html:57
+#: templates/templates/navbar.html:40
 msgid "Lib"
 msgstr ""
 
-#: templates/templates/navbar.html:65
+#: templates/templates/navbar.html:48
 msgid "Catalog"
 msgstr ""
 
-#: templates/templates/navbar.html:67
+#: templates/templates/navbar.html:50
 msgid "All books"
 msgstr ""
 
-#: templates/templates/navbar.html:68
+#: templates/templates/navbar.html:51
 msgid "All authors"
 msgstr ""
 
-#: templates/templates/navbar.html:74 templates/templates/navbar.html:75
+#: templates/templates/navbar.html:57 templates/templates/navbar.html:58
 msgid "Search"
 msgstr ""
 
-#: templates/templates/navbar.html:86 templates/templates/navbar.html:91
+#: templates/templates/navbar.html:69 templates/templates/navbar.html:74
 msgid "My profile"
 msgstr ""
 
-#: templates/templates/navbar.html:87
+#: templates/templates/navbar.html:70
 msgid "Charts"
 msgstr ""
 
-#: templates/templates/navbar.html:88
+#: templates/templates/navbar.html:71
 msgid "Import"
 msgstr ""
 
-#: templates/templates/navbar.html:92
+#: templates/templates/navbar.html:75
 msgid "My Liked"
 msgstr ""
 
-#: templates/templates/navbar.html:93
+#: templates/templates/navbar.html:76
 msgid "Edit profile"
 msgstr ""
 
-#: templates/templates/navbar.html:96
+#: templates/templates/navbar.html:79
 msgid "Logout"
 msgstr ""
 
-#: templates/templates/profile.html:63
+#: templates/templates/profile.html:20
 msgid "Username"
 msgstr ""
 
-#: templates/templates/profile.html:66
+#: templates/templates/profile.html:23
 msgid "Status"
 msgstr ""
 
-#: templates/templates/profile.html:78
+#: templates/templates/profile.html:27
+msgid "None"
+msgstr ""
+
+#: templates/templates/profile.html:40
 msgid "Info"
 msgstr ""
 
+#: templates/templates/search_page.html:21
+msgid "Search result"
+msgstr ""
+
 #: templates/templates/search_page.html:44
-msgid "More info"
-msgstr ""
-
-#: templates/templates/search_page.html:53
-msgid "Books: search by names"
-msgstr ""
-
-#: templates/templates/search_page.html:75
-msgid "Books: search by genres"
-msgstr ""
-
-#: templates/templates/search_page.html:100
 msgid "You forgot to type data to search"
 msgstr ""

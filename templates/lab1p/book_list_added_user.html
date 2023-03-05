@@ -20,8 +20,8 @@
                              {% for book in book_list %}
                                 <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
                                     <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                                        <img class="card-img-top" src="{% static 'book_bg.JPG' %}" alt="Card image cap">
-                                        <div class="card-body">
+                                        <img class="card-img-top" src="{% static 'images/cover_6_2.jpg' %}" alt="Card image cap">
+                                        <div class="card-img-overlay">
                                             <a href="{% url 'book-detail' book.pk %}" style="color: white"><h5 class="card-title">{{ book.title }}</h5></a>
                                             <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: white">{% trans "Author" %}: {{ book.author }}</a></p>
                                             <p class="card-text" style="height: 50px">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}

@@ -13,66 +13,24 @@
 
 {% block body %}
     <div id="intro_profile" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
-        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); min-height: 100%">
             <div class="text-white" style="text-align: center">
                 {% if search %}
                     <br><br>
-                    {% if authors %}
-                        <br><br>
-                        <div class="container" style="height: 50%">
-                            <h1>{% trans "Authors" %}</h1>
-                            <div class="scroll">
-                                {% for author in authors %}
-                                    <div class="card text-white bg-dark">
-                                      <div class="card-body" style="text-align: start">
-                                        <h5 class="card-title">{{ author.Name }} {{ author.Surname }}</h5>
-                                        <p class="card-text">{% trans "Bio" %}: {{ author.Bio }}</p>
-                                        <a href="{% url 'author_detail' author.pk %}" class="btn btn-secondary">{% trans "More info" %}</a>
-                                      </div>
-                                    </div>
-                                {%  endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    <br>
                     {% if books_names %}
-                        <h1>{% trans "Books: search by names" %}</h1>
-                        <div class="scroll">
-                            <div class="container" style="height: 30%">
+                        <h1>{% trans "Search result" %}</h1>
+                        <div class="scroll" style="height: 80%">
+                            <div class="container">
                                 <div class="row">
                                  {% for book in books_names %}
                                     <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
                                         <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                                            <div class="card-body">
-                                                <a href="{% url 'book-detail' book.pk %}" style="color: wheat"><h5 class="card-title">{{ book.title }}</h5></a>
-                                                <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: wheat">Author: {{ book.author }}</a></p>
-                                                <p class="card-text">ISBN: {{ book.isbn }}</p>
+                                        <img class="card-img-top" src="{% static 'images/cover_6_2.jpg' %}" alt="Card image cap">
+                                            <div class="card-img-overlay">
+                                                <a href="{% url 'book-detail' book.pk %}" style="color: white"><h5 class="card-title">{{ book.title }}</h5></a>
+                                                <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: white">Author: {{ book.author }}</a></p>
                                                 <p class="card-text">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}
                                         {% if book.genre.all.count > 3  %}... {% endif %}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                    <br>
-                    {% if books_genres %}
-                        <h1>{% trans "Books: search by genres" %}</h1>
-                        <div class="scroll">
-                            <div class="container" style="height: 30%">
-                                <div class="row">
-                                 {% for book in books_genres %}
-                                    <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
-                                        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                                            <div class="card-body">
-                                                <a href="{% url 'book-detail' book.pk %}" style="color: wheat"><h5 class="card-title">{{ book.title }}</h5></a>
-                                                <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: wheat">Author: {{ book.author }}</a></p>
-                                                <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                                <p class="card-text">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}
-                                        {% if book.genre.all.count > 3  %}... {% endif %}</p>
-                                                <p class="card-text">{{ book.Information }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -89,5 +47,4 @@
               </div>
             </div>
     </div>
-    <br>
 {%  endblock %}

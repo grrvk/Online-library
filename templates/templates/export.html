@@ -13,18 +13,9 @@
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
                 <div class="container d-flex align-items-center justify-content-center text-center h-100">
                   <div class="text-white">
-                      {% if messages %}
-                          {% for message in messages %}
-                              <div class="alert alert-{{ message.tags }}">
-                                  {{ message }}
-                              </div>
-                          {% endfor %}
-                      {% else %}
-                          <br><br><br>
-                      {% endif %}
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <h2>Data Export</h2>
+                        <h2>{% trans "Data Export" %}</h2>
 
                         <button type="submit" class="btn btn-success" >{% trans "Export" %}</button>
 

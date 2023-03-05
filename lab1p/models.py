@@ -3,17 +3,20 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 class Author(models.Model):
-    Name = models.CharField(max_length=30)
-    Surname = models.CharField(max_length=30)
+    Name = models.CharField(max_length=30, blank=False)
+    Surname = models.CharField(max_length=30, blank=False)
     Bio = models.CharField(max_length=200, default='No bio', blank=True)
 
     def __str__(self):
         return f'{self.Name} {self.Surname}'
 
     def clean(self):
+        if self.Name == '' or self.Surname == '':
+            raise ValidationError("Name or Surname cannot be blank")
         for char in self.Name:
             if not (char.isalpha() or char == ' '):
                 raise ValidationError("Name must not have numbers or symbols")
@@ -29,26 +32,33 @@ class Author(models.Model):
         return reverse('author-detail', args=[str(self.id)])
 
 
+def validate_genre(value):
+    for char in value:
+        if not (char.isalpha() or char == ' ' or char == '-' or char == '\''):
+            raise ValidationError("Genre must not have numbers or symbols except -")
+
+
 class Genre(models.Model):
     Name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.Name
 
+    ''' ---- COMMENTED DISPLAY - if works - delete
     def display_genre(self):
         return ', '.join(genre.name for genre in self.genre.all()[:3])
+    '''
 
     @classmethod
     def create(cls, Name):
         genre = cls(Name=Name)
+        genre.clean()
         return genre
 
     def clean(self):
-        for char in self.Name:
-            if not (char.isalpha() or char == ' '):
-                raise ValidationError("Genre must not have numbers or symbols")
+        validate_genre(self.Name)
 
-    display_genre.short_description = 'Genre'
+    # display_genre.short_description = 'Genre' ------ COMMENTED DUE TO DISPLAY
 
 
 # class CollectionManager(models.Manager):
@@ -59,7 +69,7 @@ class Genre(models.Model):
 class Collection(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections', null=True)
     Name = models.CharField(max_length=50, default='To read')
-    Information = models.CharField(max_length=150, default='', blank=True)
+    Information = models.CharField(max_length=150, default='No info', blank=True)
     date_created = models.DateField(null=True, blank=True)
 
     # user_coll = CollectionManager()
@@ -92,27 +102,36 @@ def create_toread(sender, **kwargs):
 post_save.connect(create_toread, sender=User)
 
 
+def validate_isbn(value):
+    for char in value:
+        if not char.isnumeric():
+            raise ValidationError("ISBN must have only numbers")
+    try:
+        if len(value) != 13:
+            raise ValidationError("ISBN must be 13 symbols long")
+    except ValueError:
+        raise ValidationError("ISBN must have only numbers")
+
+
+def validate_name(value):
+    if value == '':
+        raise ValidationError("Title cannot be blank")
+
+
+
+
 class Book(models.Model):
     # must add validators [**options]
-    title = models.CharField(max_length=50)
-    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, related_name='auth_books')
-    isbn = models.CharField('ISBN', max_length=13, unique=True, default='')
+    title = models.CharField(max_length=50, blank=False)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='auth_books')
+    isbn = models.CharField('ISBN', max_length=13, unique=True, validators=[validate_isbn])
     genre = models.ManyToManyField(Genre, related_name='books', blank=True)
-    Information = models.TextField(blank=True, max_length=1000)
-    adder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    Information = models.TextField(blank=True, max_length=1000, default='No info')
     collections = models.ManyToManyField(Collection, blank=True, related_name='books_for_collection')
 
-    # must add validators [**options]
-
     def clean(self):
-        try:
-            if len(self.isbn) != 13:
-                raise ValidationError("ISBN must be 13 symbols long")
-            # for char in self.title:
-            #    if not (char.isalpha() or char == ' ' or char == '-'):
-            #        raise ValidationError("Name of book must not have numbers")
-        except ValueError:
-            raise ValidationError("ISBN must have only numbers")
+        validate_isbn(self.isbn)
+        validate_name(self.title)
 
     def __str__(self):
         return self.title
@@ -120,6 +139,7 @@ class Book(models.Model):
     @classmethod
     def create(cls, title, author, isbn):
         book = cls(title=title, author=author, isbn=isbn)
+        book.clean()
         return book
 
     class Meta:

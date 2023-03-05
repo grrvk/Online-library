@@ -11,7 +11,7 @@
 
 {% block body %}
         <div id="intro_profile" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
-            <div class="mask" style="background-color: rgba(0, 0, 0, 0.4);">
+            <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); min-height: 100%">
                 <div class="container d-flex align-items-center justify-content-center text-center">
                   <div class="text-white">
                     {% if messages %}
@@ -27,10 +27,10 @@
                         <br>
                         <div class="row">
                              {% for book in books_obj %}
-                                <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4 pb-4" style="padding-right: 50px">
                                     <div class="card text-white bg-dark mb-3" style="max-width: 18rem">
-                                    <img class="card-img-top" src="{% static 'images/book-bg-3.jpg' %}" alt="Card image cap"> <!--book-bg-3 -->
-                                    <div class="card-body">
+                                    <img class="card-img-top" src="{% static 'images/cover_6_2.jpg' %}" alt="Card image cap"> <!--book-bg-3 -->
+                                    <div class="card-img-overlay">
                                         <a href="{% url 'book-detail' book.pk %}" style="color: white"><h5 class="card-title">{{ book.title }}</h5></a>
                                         <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: white">{{ book.author }}</a></p>
                                         <p class="card-text" style="height: 50px">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}

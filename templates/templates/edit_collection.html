@@ -19,30 +19,34 @@
                     <br>
                     <div class="row">
                          {% for book in books_obj %}
-                            <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
-                                <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                                    <div class="card-body">
-                                        <a href="{% url 'book-detail' book.pk %}"><h5 class="card-title">{{ book.title }}</h5></a>
-                                        <p class="card-text text-muted" style="font-size:12px">{% trans "Author" %}: {{ book.author }}</p>
-                                        <p class="card-text">ISBN: {{ book.isbn }}</p>
-                                        <p class="card-text" style="height: 50px">
-                                            {% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}{% if book.genre.all.count > 3  %}... {% endif %}</p>
+                                <div class="col-sm-12 col-md-6 col-lg-4 pb-4" style="padding-right: 50px">
+                                    <div class="card text-white bg-dark mb-3" style="max-width: 18rem">
+                                    <img class="card-img-top" src="{% static 'images/cover_6_2.jpg' %}" alt="Card image cap"> <!--book-bg-3 -->
+                                    <div class="card-img-overlay">
+                                        <a href="{% url 'book-detail' book.pk %}" style="color: white"><h5 class="card-title">{{ book.title }}</h5></a>
+                                        <p class="card-text text-muted" style="font-size:12px"><a href="{% url 'author_detail' book.author.pk %}" style="color: white">{{ book.author }}</a></p>
+                                        <p class="card-text" style="height: 50px">{% trans "Genres" %}: {{ book.genre.filter.all|slice:":3"|join:", " }}
+                                        {% if book.genre.all.count > 3  %}... {% endif %}</p>
                                         <div class="row">
-                                            <div class="col-3 text-center">
-                                                <form method="post">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" value="{{book.pk}}" name="book_pk">
-                                                    <a href="{% url 'delete-book' collection.pk book.pk %}" class="btn btn-primary">{% trans "Delete" %}</a>
-                                                </form>
-                                            </div>
-                                            <div class="col-4 text-center">
+                                                <div class="col-3 text-center">
 
+                                                </div>
+                                                <div class="col-4 text-center">
+
+                                                </div>
+                                                <div class="col-5 text-center">
+                                                    <form method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" value="{{book.pk}}" name="book_pk">
+                                                        <a href="{% url 'delete-book' collection.pk book.pk %}" class="btn btn-outline-light">{% trans "Delete" %}</a>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
                     </div>
                 </div>
               </div>

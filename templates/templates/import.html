@@ -4,8 +4,15 @@
 
 {% block head %}
     <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Import</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').trigger('focus')
+        })
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -14,21 +21,50 @@
                 <div class="container d-flex align-items-center justify-content-center text-center h-100">
                   <div class="text-white">
                       {% if messages %}
-                          {% for message in messages %}
-                              <div class="alert alert-{{ message.tags }}">
-                                  {{ message }}
-                              </div>
-                          {% endfor %}
+                          <div class="alert alert-warning">
+                                {% trans "There are some warnings or errors for data. Please check." %}
+                          </div>
                       {% else %}
                           <br><br><br>
                       {% endif %}
+                     <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel" style="color: black">{% trans "Error list" %}</h5>
+                              </div>
+                              <div class="modal-body" style="color: black">
+                                  {% if messages %}
+                                    {% for message in messages %}
+                                        <p>{{ message }}</p>
+                                    {% endfor %}
+                                  {% else %}
+                                      <p>{% trans "There are no errors for import yet" %}</p>
+                                  {% endif %}
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    {% trans "Close" %}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="file" name="file" />
                         <button type="submit" class="btn btn-dark">{% trans "Upload" %}</button>
                     </form>
+                  {% if messages|length >= 1 %}
+                          <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal">
+                                {% trans "Show info" %}
+                          </button>
+                  {% endif %}
                   </div>
             </div>
         </div>
     </div>
+    <!-- Button trigger modal -->
+
 {% endblock %}
