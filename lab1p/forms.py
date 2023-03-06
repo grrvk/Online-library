@@ -1,32 +1,21 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, SetPasswordForm, \
+    PasswordResetForm
+from django.contrib.auth import get_user_model
 from lab1p.models import UserProfile, Collection, Comment, Book
 
-''' --- if works - delete
-class AuthorForm(forms.Form):
-    class Meta:
-        model = Author
-        fields = '__all__'
 
+class UserLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
 
-class BookForm(forms.Form):
-    class Meta:
-        model = Book
-        fields = (
-            'title',
-            'isbn',
-        )
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Username or Email'}),
+        label="Username")
 
-
-class GenreForm(forms.Form):
-    class Meta:
-        model = Genre
-        fields = (
-            'Name',
-        )
-'''
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
 
 class RegistrationForm(UserCreationForm):
@@ -42,6 +31,11 @@ class RegistrationForm(UserCreationForm):
             'password1',
             'password2'
         )
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email exists")
 
     def clean_username(self):
         data = self.cleaned_data['username']
@@ -100,6 +94,27 @@ class EditUserProfileForm(UserChangeForm):
         )
 
 
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        first = cleaned_data.get("first_name")
+        second = cleaned_data.get("last_name")
+
+        for char in first:
+            if not (char.isalpha()):
+                raise forms.ValidationError("Fields must contain only letters")
+
+        for char in second:
+            if not (char.isalpha()):
+                raise forms.ValidationError("Fields must contain only letters")
+
+
 # only status edit form
 class EditProfileForm(UserChangeForm):
     password = None
@@ -127,26 +142,25 @@ class CollectionAddForm(forms.Form):
 
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    first_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(help_text='A valid email address, please.', required=True)
 
     class Meta:
-        model = User
-        fields = (
-            'email',
-            'username',
-            'first_name',
-            'last_name',
-            'password1',
-            'password2',
-        )
+        model = get_user_model()
+        fields = ['username', 'email', 'password1', 'password2']
 
-    def __init__(self, *args, **kwargs):
-        super(UserRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['class'] = 'form-control'
-        self.fields['password1'].widget.attrs['class'] = 'form-control'
-        self.fields['password2'].widget.attrs['class'] = 'form-control'
+    def clean(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email exists")
+
+    def save(self, commit=True):
+        user = super(UserRegisterForm, self).save(commit=False)
+        self.clean()
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+
+        return user
 
 
 class CommentForm(forms.ModelForm):
@@ -218,3 +232,15 @@ class AddBForm(forms.ModelForm):
         queryset=None,
         widget=forms.CheckboxSelectMultiple
     )
+
+
+class StPasswordForm(SetPasswordForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['new_password1', ['new_password2']]
+
+
+class PasswordReset(PasswordResetForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['new_password1', ['new_password2']]

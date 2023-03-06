@@ -44,14 +44,18 @@
                                                             <button type="submit" class="btn btn-outline-light" style="font-size:18px; border-radius: 50%; color: crimson">♡</button>
                                                         </form>
                                                     {% else %}
-                                                        <a href="{% url 'register' %}" class="btn btn-outline-light" style="font-size:18px; border-radius: 50%; color: crimson">♡</a>
+                                                        <a href="{% url 'login' %}" class="btn btn-outline-light" style="font-size:18px; border-radius: 50%; color: crimson">♡</a>
                                                     {% endif %}
                                                 </div>
                                                 <div class="col-4 text-center">
 
                                                 </div>
                                                 <div class="col-5 text-center">
-                                                    <a href="{% url 'add-book' book.pk %}" class="btn btn-outline-light">{% trans "Collections" %}</a>
+                                                    {% if user.is_authenticated %}
+                                                        <a href="{% url 'add-book' book.pk %}" class="btn btn-outline-light">{% trans "Collections" %}</a>
+                                                    {% else %}
+                                                        <a href="{% url 'login' %}" class="btn btn-outline-light">{% trans "Collections" %}</a>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>

@@ -3,31 +3,24 @@
 #intro_main {
     background-image: url("/static/images/main_bg.jpg");
     background-size: cover;
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
+    min-height: 100%;
 } /* Main page bg */
 
 #intro_profile {
     background-image: url("/static/images/profile_bg.jpg");
     object-fit: cover;
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
+    min-height: 100%;
 }
 
 @media (min-width: 992px) {
             #intro {
               margin-top: -58.59px;
-                height: 100%;
             }
             #intro_main {
               margin-top: -58.59px;
-                    height: 100%;
             }
             #intro_profile {
               margin-top: -58.59px;
-                    height: 100%;
             }
 }
 div.scroll {

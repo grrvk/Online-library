@@ -1,25 +1,38 @@
 {% extends "templates/navbar.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% load i18n %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
 
 {% block body %}
     <div id="intro_main" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
-        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); min-height: 100%">
             <br>
             <div class="container align-items-center justify-content-center text-center">
-              <div class="t208__text t-text t-text_sm" field="text" style="color:#ffffff;font-size:15px;font-weight:600;font-family:'FuturaPT';">
-                <h1>Register</h1>
-              <form method="post">
-                  {% csrf_token %}
-                  {{ form.as_p }}
-                  <button type="submit" class="btn btn-dark">{% trans "Register" %}</button>
-              </form>
+              <div class="t208__text t-text t-text_sm" field="text" style="color:#ffffff;font-size:15px;font-weight:600;
+              font-family:'FuturaPT';">
+                  <div class="text-white">
+                        <h1>Register</h1>
+                          <form method="post">
+                              {% csrf_token %}
+                              {{ form|crispy }}
+
+                            <div class="form-group">
+                                <button class="btn btn-outline-light" type="submit">Sign Up</button>
+                            </div>
+                        </form>
+                        <div class="border-top pt-3">
+                            <small>
+                                Already Have An Account? <a class="ml-2" style="color: dodgerblue" href="{% url 'login' %}">Sign In</a>
+                            </small>
+                        </div>
+                      <br>
+                  </div>
             </div>
-                <br>
             </div>
         </div>
     </div>

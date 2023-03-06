@@ -1,4 +1,5 @@
 {% extends "templates/navbar.html" %}
+{% load crispy_forms_tags %}
 {% load i18n %}
 {% load static %}
 
@@ -10,26 +11,52 @@
 
 {% block body %}
     <div id="intro_profile" class="bg-image shadow-2-strong" style="padding-top: 2.42%">
-    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
-            <div class="container align-items-center justify-content-center text-center h-100">
-              <div class="text-white">
-                  <div class="container">
-                                      {% if messages %}
-                                          {% for message in messages %}
-                                              <div class="alert alert-{{ message.tags }}">
-                                                  {{ message }}
-                                              </div>
-                                          {% endfor %}
-                                      {% else %}
-                                          <br><br><br>
-                                      {% endif %}
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                      <button type="submit" class="btn btn-dark">{% trans "Submit" %}</button>
-                    </form>
-                  </div>
-              </div>
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); min-height: 100%">
+    <br>
+        <div class="container d-flex align-items-center justify-content-center text-center">
+        <div class="text-white">
+            <form method="POST" enctype="multipart/form-data">
+                    {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning">
+                    {{ message }}
+                </div>
+            {% endfor %}
+                {% else %}
+                    <br><br><br>
+                {% endif %}
+                {% csrf_token %}
+                <div class="media">
+                    <div class="media-body">
+                        <h2 class="account-heading">{{ form.instance.username }}
+                            {% if form.instance.status %}
+                                <small>({{ form.instance.status }})</small>
+                            {% endif %}
+                        </h2>
+                    </div>
+                </div>
+
+                {% if user.username == form.instance.username %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Edit Profile Information</legend>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.first_name|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.last_name|as_crispy_field }}
+                            </div>
+                        </div>
+                        {{ form.email|as_crispy_field }}
+
+                        <a href="{% url 'change_password' %}">Change password?</a>
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-light" type="submit">Update</button>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
         </div>
     </div>
 </div>

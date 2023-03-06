@@ -1,6 +1,8 @@
 from zipfile import BadZipFile
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse, HttpRequest, FileResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -11,12 +13,20 @@ from django.contrib import messages
 
 from .models import Author, Book, Genre, UserProfile, Collection, Comment
 from django.views import generic
-from django.contrib.auth import get_user_model
-from django.contrib.auth import logout
+from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import logout, login
 from tablib import Dataset
 import xlwt
 from lab1p.forms import EditProfileForm, EditUserProfileForm, CollectionAddForm, CommentForm, \
-    UserRegisterForm, AddBForm
+    UserRegisterForm, AddBForm, UserLoginForm, UserUpdateForm, StPasswordForm, PasswordReset, RegistrationForm
+from .tokens import account_activation_token
+
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+
 
 # main
 
@@ -221,14 +231,203 @@ def register(request):
 '''
 
 
-# commented GET_OBJECT -- if works - delete
-class UserRegister(generic.CreateView):
-    form_class = UserRegisterForm
-    template_name = 'registration/registration_form.html'
-    success_url = reverse_lazy('main')
+def activate(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
 
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+
+        messages.success(request, "Thank you for your email confirmation. Now you can login your account.")
+        return redirect('main')
+    else:
+        messages.error(request, "Activation link is invalid!")
+
+    return redirect('main')
+
+
+def activateEmail(request, user, to_email):
+    mail_subject = "Activate your user account."
+    message = render_to_string("registration/template_activate_account.html", {
+        'user': user.username,
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        "protocol": 'https' if request.is_secure() else 'http'
+    })
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    if email.send():
+        messages.success(request, f'Dear {user}, please go to you email {to_email} inbox and click on \
+                received activation link to confirm and complete the registration.')
+    else:
+        messages.error(request, f'Problem sending email to {to_email}, check if you typed it correctly.')
+
+
+# commented GET_OBJECT -- if works - delete
+def UserRegister(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            activateEmail(request, user, form.cleaned_data.get('email'))
+            return redirect('main')
+
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+
+    else:
+        form = RegistrationForm()
+
+    return render(
+        request=request,
+        template_name="registration/registration_form.html",
+        context={"form": form}
+    )
     # def get_object(self):
     #    return self.request.user
+
+
+def custom_login(request):
+    if request.method == "POST":
+        form = UserLoginForm(request=request, data=request.POST)
+        if form.is_valid():
+            user = authenticate(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+            )
+            if user is not None:
+                login(request, user)
+                return redirect("main")
+
+        else:
+            for key, error in list(form.errors.items()):
+
+                messages.error(request, error)
+
+    form = UserLoginForm()
+
+    return render(
+        request=request,
+        template_name="registration/login.html",
+        context={"form": form}
+    )
+
+
+def update_log_profile(request, username):
+    if request.method == "POST":
+        user = request.user
+        form = UserUpdateForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            try:
+                form.clean()
+                user_form = form.save()
+            except Exception as e:
+                messages.error(request, f'Error: {e}')
+            messages.success(request, f'{user_form.username}, Your profile has been updated!')
+            return redirect("main")
+
+        for error in list(form.errors.values()):
+            messages.error(request, error)
+
+    user = get_user_model().objects.filter(username=username).first()
+    form = UserUpdateForm(instance=user)
+    return render(
+            request=request,
+            template_name="templates/edit_login_info.html",
+            context={"form": form}
+        )
+
+
+@login_required
+def password_change(request):
+    user = request.user
+    if request.method == "POST":
+        form = StPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Password was updated')
+            return redirect('login')
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+    form = StPasswordForm(user)
+    return render(request, 'registration/password_reset_confirm.html', {'form': form})
+
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        form = PasswordReset(request.POST)
+        if form.is_valid():
+            user_email = form.cleaned_data['email']
+            associated_user = get_user_model().objects.filter(Q(email=user_email)).first()
+            if associated_user:
+                subject = "Password Reset request"
+                message = render_to_string("registration/template_reset_password.html", {
+                    'user': associated_user,
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(associated_user.pk)),
+                    'token': account_activation_token.make_token(associated_user),
+                    "protocol": 'https' if request.is_secure() else 'http'
+                })
+                email = EmailMessage(subject, message, to=[associated_user.email])
+                if email.send():
+                    messages.success(request,
+                        """
+                        <h2>Password reset sent</h2><hr>
+                        <p>
+                            We've emailed you instructions for setting your password, if an account exists with the email you entered. 
+                            You should receive them shortly.<br>If you don't receive an email, please make sure you've entered the address 
+                            you registered with, and check your spam folder.
+                        </p>
+                        """
+                    )
+                else:
+                    messages.error(request, "Problem sending reset password email, SERVER PROBLEM")
+
+            return redirect('main')
+
+    form = PasswordReset()
+    return render(
+        request=request,
+        template_name="registration/password_reset.html",
+        context={"form": form}
+        )
+
+
+def passwordResetConfirm(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        if request.method == 'POST':
+            form = StPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your password has been set. You may go ahead and log in now.")
+                return redirect('main')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+
+        form = StPasswordForm(user)
+        return render(request, 'registration/password_reset_confirm.html', {'form': form})
+    else:
+        messages.error(request, "Link is expired")
+
+    messages.error(request, 'Something went wrong, redirecting back to Homepage')
+    return redirect("main")
 
 
 # features
@@ -300,92 +499,92 @@ def importExcel(request):
             imported_data = dataset.load(new_authors.read(), format='xls')
         except Exception as e:
             messages.warning(request, f"Error {e} for the book with id {e}")
-            print(f"exception { e}")
-            #finish def
+            print(f"exception {e}")
+            # finish def
         error_messages = []
         for index, data in enumerate(imported_data):
-                latest_id = Author.objects.all().values_list('id', flat=True).order_by('-id').first()
-                if latest_id is None:
-                    latest_id = 0
-                # latest_id_genre = Genre.objects.all().values_list('id', flat=True).order_by('-id').first()
+            latest_id = Author.objects.all().values_list('id', flat=True).order_by('-id').first()
+            if latest_id is None:
+                latest_id = 0
+            # latest_id_genre = Genre.objects.all().values_list('id', flat=True).order_by('-id').first()
 
-                if not Author.objects.filter(Name=data[1], Surname=data[2]):
-                    value = Author(
-                        latest_id + 1,
-                        data[1],
-                        data[2],
-                        data[3],
-                    )
-                    try:
-                        value.clean()
-                        value.save()
-                    except Exception as e:
-                        messages.warning(request, f"Error {e} for the book with id ")
-
+            if not Author.objects.filter(Name=data[1], Surname=data[2]):
+                value = Author(
+                    latest_id + 1,
+                    data[1],
+                    data[2],
+                    data[3],
+                )
                 try:
-                    author = Author.objects.get(Name=data[1], Surname=data[2])
-                    author.clean()
+                    value.clean()
+                    value.save()
                 except Exception as e:
-                    messages.warning(request, f"Error {e} for the author with id {data[0]}. Data of "
-                                              f"this row was ignored. ")
+                    messages.warning(request, f"Error {e} for the book with id ")
 
-                import_books = Book.objects.all()
-                unique = True
-                print(data[6])
-                for book in import_books:
-                    if book.isbn == data[6]:
-                        unique = False
-                if not unique:
-                    book = Book.objects.get(isbn=data[6])
-                    if book.title == data[5] and book.author == author:
-                        genres = Genre.objects.all()
-                        for i in range(7, 10):
-                            if data[i] != '':
-                                unique_two = True
-                                for genre in genres:
-                                    if genre.Name == data[i]:
-                                        unique_two = False
-                                genre_new = None
-                                if unique_two:
-                                    try:
-                                        genre_new = Genre.create(Name=data[i])
-                                        genre_new.save()
-                                    except Exception as e:
-                                        messages.warning(request, f"Error {e} for the book with id {data[4]}")
-                                else:
-                                    genre_new = Genre.objects.get(Name=data[i])
-                                book.genre.add(genre_new)
-                    else:
-                        messages.warning(request, f"There is another book with the same isbn as the book with "
-                                                  f"id {data[4]}. Data was ignored.")
+            try:
+                author = Author.objects.get(Name=data[1], Surname=data[2])
+                author.clean()
+            except Exception as e:
+                messages.warning(request, f"Error {e} for the author with id {data[0]}. Data of "
+                                          f"this row was ignored. ")
 
+            import_books = Book.objects.all()
+            unique = True
+            print(data[6])
+            for book in import_books:
+                if book.isbn == data[6]:
+                    unique = False
+            if not unique:
+                book = Book.objects.get(isbn=data[6])
+                if book.title == data[5] and book.author == author:
+                    genres = Genre.objects.all()
+                    for i in range(7, 10):
+                        if data[i] != '':
+                            unique_two = True
+                            for genre in genres:
+                                if genre.Name == data[i]:
+                                    unique_two = False
+                            genre_new = None
+                            if unique_two:
+                                try:
+                                    genre_new = Genre.create(Name=data[i])
+                                    genre_new.save()
+                                except Exception as e:
+                                    messages.warning(request, f"Error {e} for the book with id {data[4]}")
+                            else:
+                                genre_new = Genre.objects.get(Name=data[i])
+                            book.genre.add(genre_new)
                 else:
-                    if not Book.objects.filter(title=data[5], author=author):
-                        try:
-                            book = Book.create(data[5], author, data[6])
-                            book.save()
-                        except Exception as e:
-                            messages.warning(request, f"Error {e} for the book with id {data[4]}")
-                        genres = Genre.objects.all()
-                        for i in range(7, 10):
-                            if data[i] != '':
-                                unique_two = True
-                                for genre in genres:
-                                    if genre.Name == data[i]:
-                                        unique_two = False
-                                if unique_two:
-                                    try:
-                                        genre_new = Genre.create(Name=data[i])
-                                        genre_new.save()
-                                    except Exception as e:
-                                        messages.warning(request, f"Error {e} for the book with id {data[4]}")
-                                else:
-                                    genre_new = Genre.objects.get(Name=data[i])
-                                book.genre.add(genre_new)
+                    messages.warning(request, f"There is another book with the same isbn as the book with "
+                                              f"id {data[4]}. Data was ignored.")
+
+            else:
+                if not Book.objects.filter(title=data[5], author=author):
+                    try:
+                        book = Book.create(data[5], author, data[6])
                         book.save()
-                    else:
-                        messages.warning(request, f"There is already a book with the the same name and author as book "
-                                                  f"with id {data[4]}. Data was ignored.")
+                    except Exception as e:
+                        messages.warning(request, f"Error {e} for the book with id {data[4]}")
+                    genres = Genre.objects.all()
+                    for i in range(7, 10):
+                        if data[i] != '':
+                            unique_two = True
+                            for genre in genres:
+                                if genre.Name == data[i]:
+                                    unique_two = False
+                            if unique_two:
+                                try:
+                                    genre_new = Genre.create(Name=data[i])
+                                    genre_new.save()
+                                except Exception as e:
+                                    messages.warning(request, f"Error {e} for the book with id {data[4]}")
+                            else:
+                                genre_new = Genre.objects.get(Name=data[i])
+                            book.genre.add(genre_new)
+                    book.save()
+                else:
+                    messages.warning(request, f"There is already a book with the the same name and author as book "
+                                              f"with id {data[4]}. Data was ignored.")
 
     return render(request, 'templates/import.html')
 

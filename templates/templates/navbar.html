@@ -74,7 +74,7 @@
                                             <a class="dropdown-item" href="{% url 'user-detail' %}">{% trans "My profile" %}</a>
                                             <a class="dropdown-item" href="{% url 'my-added' %}">{% trans "My Liked" %}</a>
                                             <a class="dropdown-item" href="{% url 'edit' %}">{% trans "Edit profile" %}</a>
-                                            <!-- <a class="dropdown-item" href="{% url 'edit-login' %}">Edit login info</a> -->
+                                            <!--<a class="dropdown-item" href="{% url 'edit-login' user.get_username %}">Edit login info</a>-->
                                         {% endif %}
                                         <a class="dropdown-item" href="{% url 'logout' %}">{% trans "Logout" %}</a>
                                     </div>

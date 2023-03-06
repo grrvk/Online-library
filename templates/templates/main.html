@@ -4,6 +4,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
     <title>Home</title>
 {% endblock %}
 
@@ -12,7 +13,15 @@
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
             <div class="container d-flex align-items-center justify-content-center text-center h-100">
               <div class="t208__text t-text t-text_sm" field="text" style="color:#ffffff;font-size:20px;font-weight:600;font-family:'FuturaPT';text-transform:uppercase;">
-
+                  {% if messages %}
+                          {% for message in messages %}
+                              <div class="alert alert-{{ message.tags }}">
+                                  {{ message }}
+                              </div>
+                          {% endfor %}
+                      {% else %}
+                          <br><br><br>
+                  {% endif %}
                   <h1>{% trans "Local Library Home" %}</h1>
                   <p>{% trans "Welcome to LocalLibrary" %}</p>
                   <br>
